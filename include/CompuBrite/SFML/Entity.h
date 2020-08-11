@@ -3,37 +3,44 @@
 
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Transformable.hpp>
+#include <SFML/System/Time.hpp>
 
 #include <vector>
+#include <map>
 #include <functional>
 
 namespace CompuBrite {
 namespace SFML {
 
-struct EntityImpl
-{
-    using DrawThis = std::function<void(sf::RenderTarget&, sf::RenderStates)>;
-    using LocalBounds = std::function<sf::FloatRect()>;
-
-    DrawThis drawThis_ = [](sf::RenderTarget&, sf::RenderStates) { };
-    LocalBounds getLocalBounds_ = []() { return sf::FloatRect(); };
-};
-
 class Entity : public sf::Drawable, public sf::Transformable
 {
 public:
-    Entity(EntityImpl impl = EntityImpl());
+
+    Entity() : Entity(0) { }
+    explicit Entity(int zOrder) { }
     virtual ~Entity();
-    sf::FloatRect getLocalBounds() const { return impl_.getLocalBounds_(); };
+
+    virtual sf::FloatRect getLocalBounds() const;
+    bool addChild(Entity &child, int zOrder = 0);
+
+public:
+    void update(sf::Time dt);
 
 private:
     void drawChildren(sf::RenderTarget &target, sf::RenderStates states) const;
     void draw (sf::RenderTarget &target, sf::RenderStates states) const final;
+    void updateChildren(sf::Time dt);
+
+    virtual void updateThis(sf::Time dt);
+    virtual void drawThis(sf::RenderTarget &target, sf::RenderStates states) const;
 
 private:
-    Entity *parent_ = nullptr;
-    std::vector<Entity*> children_;
-    EntityImpl impl_;
+    using zLevel = std::vector<Entity*>;
+    using Children = std::map<int, zLevel>;
+
+    Children children_;
+    Entity *parent_{nullptr};
+    int zOrder_{0};
 
 };
 

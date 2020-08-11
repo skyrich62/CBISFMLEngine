@@ -4,6 +4,7 @@
 	<Project>
 		<Option title="CBISFMLEngine" />
 		<Option pch_mode="2" />
+		<Option default_target="test" />
 		<Option compiler="mingw_gcc-73" />
 		<Build>
 			<Target title="Debug">
@@ -16,6 +17,7 @@
 				<Compiler>
 					<Add option="-Wall" />
 					<Add option="-g" />
+					<Add directory="include" />
 				</Compiler>
 				<Linker>
 					<Add library="sfml-graphics-d" />
@@ -34,6 +36,7 @@
 				<Compiler>
 					<Add option="-O2" />
 					<Add option="-Wall" />
+					<Add directory="include" />
 				</Compiler>
 				<Linker>
 					<Add library="sfml-graphics" />
@@ -51,12 +54,14 @@
 					<Add option="-std=c17" />
 					<Add option="-g" />
 					<Add option="-DCBI_CHECKPOINTS=1" />
+					<Add directory="include" />
 				</Compiler>
 				<Linker>
 					<Add library="sfml-graphics-d" />
 					<Add library="sfml-window-d" />
 					<Add library="sfml-system-d" />
 					<Add library="C:/Users/rnewman/Documents/CodeBlocks/CBIUtil/bin/Debug/libCBIUtil.a" />
+					<LinkerExe value="CppCompiler" />
 				</Linker>
 			</Target>
 		</Build>
@@ -80,7 +85,10 @@
 		</Linker>
 		<Unit filename="cb.bmp" />
 		<Unit filename="include/CompuBrite/SFML/Entity.h" />
+		<Unit filename="include/CompuBrite/SFML/EventManager.h" />
+		<Unit filename="include/CompuBrite/SFML/ResourceManager.h" />
 		<Unit filename="src/CompuBrite/SFML/Entity.cpp" />
+		<Unit filename="src/CompuBrite/SFML/EventManager.cpp" />
 		<Unit filename="test.cpp">
 			<Option target="test" />
 		</Unit>
