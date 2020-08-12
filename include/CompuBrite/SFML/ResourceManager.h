@@ -5,7 +5,7 @@
 #include <memory>
 #include <utility>
 
-#include "compubrite/checkpoint.h"
+#include "CompuBrite/CheckPoint.h"
 
 namespace CompuBrite
 {

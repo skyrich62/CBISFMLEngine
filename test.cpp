@@ -1,7 +1,11 @@
-#include <CompuBrite/SFML/Entity.h>
+#include <CompuBrite/SFML/IEntity.h>
 #include <CompuBrite/SFML/ResourceManager.h>
 #include <CompuBrite/SFML/EventManager.h>
-#include <compubrite/checkpoint.h>
+#include <CompuBrite/SFML/TProperty.h>
+#include <CompuBrite/SFML/MovementSystem.h>
+#include <CompuBrite/SFML/DrawingSystem.h>
+#include <CompuBrite/SFML/Engine.h>
+#include <CompuBrite/CheckPoint.h>
 
 #include <SFML/Graphics.hpp>
 
@@ -10,7 +14,7 @@ namespace cbi = CompuBrite;
 
 enum class Textures {Block};
 
-class Block : public cbisf::Entity
+class Block : public cbisf::IEntity
 {
 public:
     Block(const sf::Texture &texture) :
@@ -23,12 +27,6 @@ public:
         return sprite_.getLocalBounds();
     }
 
-    void updateThis(sf::Time dt)
-    {
-        this->rotate(rotation_ * dt.asSeconds());
-    }
-
-    float &rotation() { return rotation_; }
 private:
     void drawThis(sf::RenderTarget &target, sf::RenderStates states) const override
     {
@@ -36,7 +34,6 @@ private:
     }
 private:
     sf::Sprite sprite_;
-    float rotation_ = 0.0f;
 };
 
 int main()
@@ -51,8 +48,6 @@ int main()
         return 5;
     }
 
-    cbisf::EventManager events;
-
     Block entity(textureManager.get(Textures::Block));
     Block child(textureManager.get(Textures::Block));
 
@@ -63,56 +58,46 @@ int main()
     child.move(size.width* 1.5f, size.height * 1.5f);
     entity.addChild(child);
 
+    cbisf::MovementSystem ms;
+    ms.addEntity(entity);
+    ms.addEntity(child);
 
-    events.add({sf::Event::KeyReleased, {sf::Keyboard::Up}},
+    cbisf::DrawingSystem ds;
+    ds.addEntity(entity);
+
+    cbisf::Engine engine;
+    engine.addSystem(ms);
+    engine.addSystem(ds);
+
+    engine.addEvent({sf::Event::KeyReleased, {sf::Keyboard::Up}},
                [&entity](const sf::Event &e) {
-                   entity.rotation() += 10.0f;
+                   entity.properties.ref<float>("rotation") += 10.0f;
                } );
-    events.add({sf::Event::KeyReleased, {sf::Keyboard::Down}},
+    engine.addEvent({sf::Event::KeyReleased, {sf::Keyboard::Down}},
                [&entity](const sf::Event &e) {
-                   entity.rotation() -= 10.0f;
+                   entity.properties.ref<float>("rotation") -= 10.0f;
                } );
-    events.add({sf::Event::KeyReleased, {sf::Keyboard::Left}},
+    engine.addEvent({sf::Event::KeyReleased, {sf::Keyboard::Left}},
                [&child](const sf::Event &e) {
-                   child.rotation() += 10.0f;
+                   child.properties.ref<float>("rotation") += 10.0f;
                } );
-    events.add({sf::Event::KeyReleased, {sf::Keyboard::Right}},
+    engine.addEvent({sf::Event::KeyReleased, {sf::Keyboard::Right}},
                [&child](const sf::Event &e) {
-                   child.rotation() -= 10.0f;
+                   child.properties.ref<float>("rotation") -= 10.0f;
                } );
-    events.add({sf::Event::Closed},
+    engine.addEvent({sf::Event::Closed},
                [&app](const sf::Event &) {
                    app.close();
                } );
-    events.add({sf::Event::KeyReleased, {sf::Keyboard::Escape}},
+    engine.addEvent({sf::Event::KeyReleased, {sf::Keyboard::Escape}},
                [&app](const sf::Event &) {
                     app.close();
                 });
 
     cbi::CheckPoint dbg("entity");
 
-    sf::Clock clock;
-	// Start the game loop
-    while (app.isOpen())
-    {
-        // Process events
-        sf::Event event;
-        while (app.pollEvent(event))
-        {
-            events.dispatch(event);
-        }
 
-        // Clear screen
-        app.clear();
-
-        entity.update(clock.restart());
-
-        // Draw the sprite
-        app.draw(entity);
-
-        // Update the window
-        app.display();
-    }
+    engine.run(app);
 
     return EXIT_SUCCESS;
 }

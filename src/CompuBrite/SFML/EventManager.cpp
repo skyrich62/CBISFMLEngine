@@ -1,5 +1,5 @@
 #include "CompuBrite/SFML/EventManager.h"
-#include "compubrite/checkpoint.h"
+#include "CompuBrite/CheckPoint.h"
 
 namespace CompuBrite {
 namespace SFML {

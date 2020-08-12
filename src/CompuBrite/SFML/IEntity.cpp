@@ -1,21 +1,22 @@
-#include "CompuBrite/SFML/Entity.h"
+#include "CompuBrite/SFML/IEntity.h"
+#include "CompuBrite/SFML/ISystem.h"
 
 namespace CompuBrite {
 namespace SFML {
 
-Entity::~Entity()
+IEntity::~IEntity()
 {
     //dtor
 }
 
 sf::FloatRect
-Entity::getLocalBounds() const
+IEntity::getLocalBounds() const
 {
     return sf::FloatRect();
 }
 
 void
-Entity::draw(sf::RenderTarget &target, sf::RenderStates states) const
+IEntity::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {
     states.transform *= this->getTransform();
     drawThis(target, states);
@@ -23,7 +24,7 @@ Entity::draw(sf::RenderTarget &target, sf::RenderStates states) const
 }
 
 void
-Entity::drawChildren(sf::RenderTarget &target, sf::RenderStates states) const
+IEntity::drawChildren(sf::RenderTarget &target, sf::RenderStates states) const
 {
     for (auto &level : children_) {
         for (auto &child : level.second) {
@@ -33,7 +34,7 @@ Entity::drawChildren(sf::RenderTarget &target, sf::RenderStates states) const
 }
 
 bool
-Entity::addChild(Entity &child, int zOrder)
+IEntity::addChild(IEntity &child, int zOrder)
 {
     child.zOrder_ = zOrder;
     auto found = children_.find(zOrder);
@@ -50,19 +51,19 @@ Entity::addChild(Entity &child, int zOrder)
 }
 
 void
-Entity::drawThis(sf::RenderTarget &, sf::RenderStates) const
+IEntity::drawThis(sf::RenderTarget &, sf::RenderStates) const
 {
 }
 
 void
-Entity::update(sf::Time dt)
+IEntity::update(sf::Time dt)
 {
     updateThis(dt);
     updateChildren(dt);
 }
 
 void
-Entity::updateChildren(sf::Time dt)
+IEntity::updateChildren(sf::Time dt)
 {
     for (auto &level : children_) {
         for (auto &child : level.second) {
@@ -72,8 +73,32 @@ Entity::updateChildren(sf::Time dt)
 }
 
 void
-Entity::updateThis(sf::Time dt)
+IEntity::updateThis(sf::Time dt)
 {
+}
+
+void
+IEntity::addSystem(ISystem &system, bool callback)
+{
+    auto found = find(systems_.begin(), systems_.end(), &system);
+    if (found == systems_.end()) {
+        systems_.push_back(&system);
+        if (callback) {
+            system.addEntity(*this, false);
+        }
+    }
+}
+
+void
+IEntity::dropSystem(ISystem &system, bool callback)
+{
+    auto found = find(systems_.begin(), systems_.end(), &system);
+    if (found != systems_.end()) {
+        systems_.erase(found);
+        if (callback) {
+            system.dropEntity(*this, false);
+        }
+    }
 }
 
 } // namespace SFML

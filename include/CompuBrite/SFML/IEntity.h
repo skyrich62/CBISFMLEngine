@@ -5,6 +5,9 @@
 #include <SFML/Graphics/Transformable.hpp>
 #include <SFML/System/Time.hpp>
 
+#include <CompuBrite/SFML/PropertyManager.h>
+
+
 #include <vector>
 #include <map>
 #include <functional>
@@ -12,19 +15,22 @@
 namespace CompuBrite {
 namespace SFML {
 
-class Entity : public sf::Drawable, public sf::Transformable
+class ISystem;
+
+class IEntity : public sf::Drawable, public sf::Transformable
 {
 public:
 
-    Entity() : Entity(0) { }
-    explicit Entity(int zOrder) { }
-    virtual ~Entity();
+    IEntity() : IEntity(0) { }
+    explicit IEntity(int zOrder) { }
+    virtual ~IEntity();
 
     virtual sf::FloatRect getLocalBounds() const;
-    bool addChild(Entity &child, int zOrder = 0);
-
-public:
+    bool addChild(IEntity &child, int zOrder = 0);
     void update(sf::Time dt);
+    void addSystem(ISystem &system, bool callback = true);
+    void dropSystem(ISystem &system, bool callback = true);
+
 
 private:
     void drawChildren(sf::RenderTarget &target, sf::RenderStates states) const;
@@ -35,12 +41,16 @@ private:
     virtual void drawThis(sf::RenderTarget &target, sf::RenderStates states) const;
 
 private:
-    using zLevel = std::vector<Entity*>;
+    using zLevel = std::vector<IEntity*>;
     using Children = std::map<int, zLevel>;
 
     Children children_;
-    Entity *parent_{nullptr};
+    IEntity *parent_{nullptr};
     int zOrder_{0};
+    std::vector<ISystem*> systems_;
+
+public:
+    PropertyManager properties;
 
 };
 

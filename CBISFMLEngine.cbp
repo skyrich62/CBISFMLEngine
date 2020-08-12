@@ -84,11 +84,23 @@
 			<Add directory="$(#sfml.lib)" />
 		</Linker>
 		<Unit filename="cb.bmp" />
-		<Unit filename="include/CompuBrite/SFML/Entity.h" />
+		<Unit filename="include/CompuBrite/SFML/DrawingSystem.h" />
+		<Unit filename="include/CompuBrite/SFML/Engine.h" />
 		<Unit filename="include/CompuBrite/SFML/EventManager.h" />
+		<Unit filename="include/CompuBrite/SFML/IEntity.h" />
+		<Unit filename="include/CompuBrite/SFML/IProperty.h" />
+		<Unit filename="include/CompuBrite/SFML/ISystem.h" />
+		<Unit filename="include/CompuBrite/SFML/MovementSystem.h" />
+		<Unit filename="include/CompuBrite/SFML/PropertyManager.h" />
 		<Unit filename="include/CompuBrite/SFML/ResourceManager.h" />
-		<Unit filename="src/CompuBrite/SFML/Entity.cpp" />
+		<Unit filename="include/CompuBrite/SFML/TProperty.h" />
+		<Unit filename="src/CompuBrite/SFML/DrawingSystem.cpp" />
+		<Unit filename="src/CompuBrite/SFML/Engine.cpp" />
 		<Unit filename="src/CompuBrite/SFML/EventManager.cpp" />
+		<Unit filename="src/CompuBrite/SFML/IEntity.cpp" />
+		<Unit filename="src/CompuBrite/SFML/ISystem.cpp" />
+		<Unit filename="src/CompuBrite/SFML/MovementSystem.cpp" />
+		<Unit filename="src/CompuBrite/SFML/PropertyManager.cpp" />
 		<Unit filename="test.cpp">
 			<Option target="test" />
 		</Unit>
