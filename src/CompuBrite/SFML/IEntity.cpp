@@ -1,6 +1,8 @@
 #include "CompuBrite/SFML/IEntity.h"
 #include "CompuBrite/SFML/ISystem.h"
 
+#include <map>
+
 namespace CompuBrite {
 namespace SFML {
 
@@ -26,28 +28,37 @@ IEntity::draw(sf::RenderTarget &target, sf::RenderStates states) const
 void
 IEntity::drawChildren(sf::RenderTarget &target, sf::RenderStates states) const
 {
-    for (auto &level : children_) {
-        for (auto &child : level.second) {
-            child->draw(target, states);
+    std::multimap<int, IEntity*> drawings;
+    for (auto child : children_) {
+        if (child) {
+            drawings.insert(std::pair<int, IEntity*>(child->zOrder(), child));
         }
     }
+    for (auto child : drawings) {
+        child.second->draw(target, states);
+    }
+}
+
+bool
+IEntity::addChild(IEntity &child)
+{
+    auto found = std::find(children_.begin(), children_.end(), &child);
+    if (found != children_.end()) {
+        return false;
+    }
+    children_.push_back(&child);
+    child.parent_ = this;
+    return true;
 }
 
 bool
 IEntity::addChild(IEntity &child, int zOrder)
 {
-    child.zOrder_ = zOrder;
-    auto found = children_.find(zOrder);
-    if (found == children_.end()) {
-        children_.emplace(zOrder, zLevel());
-        found = children_.find(zOrder);
+    auto ret = addChild(child);
+    if (ret) {
+        child.zOrder_ = zOrder;
     }
-    auto &vec = found->second;
-    if (std::find(vec.begin(), vec.end(), &child) == vec.end()) {
-        vec.emplace_back(&child);
-        return true;
-    }
-    return false;
+    return ret;
 }
 
 void
@@ -65,10 +76,8 @@ IEntity::update(sf::Time dt)
 void
 IEntity::updateChildren(sf::Time dt)
 {
-    for (auto &level : children_) {
-        for (auto &child : level.second) {
-            child->update(dt);
-        }
+    for (auto child : children_) {
+        child->update(dt);
     }
 }
 
@@ -100,6 +109,29 @@ IEntity::dropSystem(ISystem &system, bool callback)
         }
     }
 }
+
+sf::Transform
+IEntity::getGlobalTransform() const
+{
+    auto transform = sf::Transform::Identity;
+    for (auto entity = this; entity; entity = entity->parent_) {
+        transform = entity->getTransform() * transform;
+    }
+    return transform;
+}
+
+sf::Vector2f
+IEntity::getGlobalPosition() const
+{
+    return getGlobalTransform() * this->getOrigin();
+}
+
+sf::FloatRect
+IEntity::getGlobalBounds() const
+{
+    return getGlobalTransform().transformRect(getLocalBounds());
+}
+
 
 } // namespace SFML
 } // namespace CompuBrite

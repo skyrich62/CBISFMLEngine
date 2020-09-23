@@ -1,8 +1,8 @@
 #ifndef COMPUBRITE_SFML_ISYSTEM_H
 #define COMPUBRITE_SFML_ISYSTEM_H
 
-#include <SFML/System/Time.hpp>
 #include <SFML/Graphics/Drawable.hpp>
+#include <SFML/System/Time.hpp>
 
 #include <CompuBrite/SFML/IEntity.h>
 

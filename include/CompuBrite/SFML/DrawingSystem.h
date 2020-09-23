@@ -9,13 +9,14 @@ namespace SFML {
 class DrawingSystem : public CompuBrite::SFML::ISystem
 {
     public:
-        DrawingSystem() = default;
+        explicit DrawingSystem(bool boundingBoxes = false);
         virtual ~DrawingSystem() = default;
 
     protected:
         void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
 
     private:
+        bool boundingBoxes_;
 };
 
 } // namespace SFML

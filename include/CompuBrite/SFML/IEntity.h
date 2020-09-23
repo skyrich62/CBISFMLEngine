@@ -9,7 +9,6 @@
 
 
 #include <vector>
-#include <map>
 #include <functional>
 
 namespace CompuBrite {
@@ -21,33 +20,39 @@ class IEntity : public sf::Drawable, public sf::Transformable
 {
 public:
 
-    IEntity() : IEntity(0) { }
-    explicit IEntity(int zOrder) { }
+    IEntity() = default;
+    explicit IEntity(int zOrder) : zOrder_(zOrder) { }
     virtual ~IEntity();
 
     virtual sf::FloatRect getLocalBounds() const;
-    bool addChild(IEntity &child, int zOrder = 0);
+    bool addChild(IEntity &child, int zOrder);
+    bool addChild(IEntity &child);
     void update(sf::Time dt);
     void addSystem(ISystem &system, bool callback = true);
     void dropSystem(ISystem &system, bool callback = true);
-
+    sf::Vector2f getGlobalPosition() const;
+    sf::FloatRect getGlobalBounds() const;
+    sf::Transform getGlobalTransform() const;
+    int zOrder() const                            { return zOrder_; }
+    void zOrder(int order)                        { zOrder_ = order; }
 
 private:
     void drawChildren(sf::RenderTarget &target, sf::RenderStates states) const;
     void draw (sf::RenderTarget &target, sf::RenderStates states) const final;
     void updateChildren(sf::Time dt);
 
+
     virtual void updateThis(sf::Time dt);
     virtual void drawThis(sf::RenderTarget &target, sf::RenderStates states) const;
 
 private:
-    using zLevel = std::vector<IEntity*>;
-    using Children = std::map<int, zLevel>;
+    using Children = std::vector<IEntity*>;
+    using Systems = std::vector<ISystem*>;
 
     Children children_;
+    Systems systems_;
     IEntity *parent_{nullptr};
     int zOrder_{0};
-    std::vector<ISystem*> systems_;
 
 public:
     PropertyManager properties;

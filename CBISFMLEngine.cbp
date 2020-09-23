@@ -5,33 +5,42 @@
 		<Option title="CBISFMLEngine" />
 		<Option pch_mode="2" />
 		<Option default_target="test" />
-		<Option compiler="mingw_gcc-73" />
+		<Option compiler="mingw_gcc-73_64-bit" />
+		<MakeCommands>
+			<Build command="" />
+			<CompileFile command="" />
+			<Clean command="" />
+			<DistClean command="" />
+			<AskRebuildNeeded command="" />
+			<SilentBuild command=" &gt; $(CMD_NULL)" />
+		</MakeCommands>
 		<Build>
 			<Target title="Debug">
 				<Option output="bin/Debug/CBISFMLEngine" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
 				<Option object_output="obj/Debug/" />
 				<Option type="2" />
-				<Option compiler="mingw_gcc-73" />
+				<Option compiler="mingw_gcc-73_64-bit" />
 				<Option createDefFile="1" />
-				<Compiler>
-					<Add option="-Wall" />
-					<Add option="-g" />
-					<Add directory="include" />
-				</Compiler>
-				<Linker>
-					<Add library="sfml-graphics-d" />
-					<Add library="sfml-window-d" />
-					<Add library="sfml-system-d" />
-					<Add directory="$(#sfml)" />
-				</Linker>
+				<Option projectCompilerOptionsRelation="-1" />
+				<Option projectLinkerOptionsRelation="-1" />
+				<Option projectIncludeDirsRelation="-1" />
+				<Option projectLibDirsRelation="-1" />
+				<MakeCommands>
+					<Build command="" />
+					<CompileFile command="" />
+					<Clean command="" />
+					<DistClean command="" />
+					<AskRebuildNeeded command="" />
+					<SilentBuild command=" &gt; $(CMD_NULL)" />
+				</MakeCommands>
 			</Target>
 			<Target title="Release">
 				<Option output="bin/Release/CBISFMLEngine" prefix_auto="1" extension_auto="1" />
 				<Option working_dir="" />
 				<Option object_output="obj/Release/" />
 				<Option type="2" />
-				<Option compiler="mingw_gcc-73" />
+				<Option compiler="mingw_gcc-73_64-bit" />
 				<Option createDefFile="1" />
 				<Compiler>
 					<Add option="-O2" />
@@ -48,9 +57,10 @@
 				<Option output="bin/CBISFMLEngine" prefix_auto="1" extension_auto="1" />
 				<Option object_output="objs/test" />
 				<Option type="1" />
-				<Option compiler="mingw_gcc-73" />
+				<Option compiler="mingw_gcc-73_64-bit" />
 				<Option use_console_runner="0" />
 				<Compiler>
+					<Add option="-std=c++17" />
 					<Add option="-std=c17" />
 					<Add option="-g" />
 					<Add option="-DCBI_CHECKPOINTS=1" />
@@ -60,7 +70,10 @@
 					<Add library="sfml-graphics-d" />
 					<Add library="sfml-window-d" />
 					<Add library="sfml-system-d" />
-					<Add library="C:/Users/rnewman/Documents/CodeBlocks/CBIUtil/bin/Debug/libCBIUtil.a" />
+					<Add library="CBIUtil" />
+					<Add library="stdc++fs" />
+					<Add directory="C:/SFML-2.5.1-windows-gcc-7.3.0-mingw-64-bit/SFML-2.5.1/lib" />
+					<Add directory="../CBIUtil/bin/Debug" />
 					<LinkerExe value="CppCompiler" />
 				</Linker>
 			</Target>
@@ -70,37 +83,42 @@
 		</VirtualTargets>
 		<Compiler>
 			<Add option="-std=c++17" />
-			<Add directory="include" />
-			<Add directory="$(#sfml.include)" />
-			<Add directory="../CBIUtil/include" />
+			<Add directory="C:/Users/rnewman/Documents/CodeBlocks/CBIUtil/include" />
+			<Add directory="C:/Users/rnewman/Documents/CodeBlocks/CBISFMLEngine/include" />
+			<Add directory="C:/SFML-2.5.1-windows-gcc-7.3.0-mingw-64-bit/SFML-2.5.1/include" />
 		</Compiler>
-		<Linker>
-			<Add library="mingw32" />
-			<Add library="user32" />
-			<Add library="gdi32" />
-			<Add library="winmm" />
-			<Add library="dxguid" />
-			<Add library="libstdc++fs.a" />
-			<Add directory="$(#sfml.lib)" />
-		</Linker>
 		<Unit filename="cb.bmp" />
+		<Unit filename="include/CompuBrite/SFML/CircleEntity.h" />
+		<Unit filename="include/CompuBrite/SFML/CollisionSystem.h" />
+		<Unit filename="include/CompuBrite/SFML/ConvexEntity.h" />
 		<Unit filename="include/CompuBrite/SFML/DrawingSystem.h" />
 		<Unit filename="include/CompuBrite/SFML/Engine.h" />
 		<Unit filename="include/CompuBrite/SFML/EventManager.h" />
 		<Unit filename="include/CompuBrite/SFML/IEntity.h" />
 		<Unit filename="include/CompuBrite/SFML/IProperty.h" />
+		<Unit filename="include/CompuBrite/SFML/IShapeEntity.h" />
 		<Unit filename="include/CompuBrite/SFML/ISystem.h" />
 		<Unit filename="include/CompuBrite/SFML/MovementSystem.h" />
 		<Unit filename="include/CompuBrite/SFML/PropertyManager.h" />
+		<Unit filename="include/CompuBrite/SFML/RectangleEntity.h" />
 		<Unit filename="include/CompuBrite/SFML/ResourceManager.h" />
+		<Unit filename="include/CompuBrite/SFML/SpriteEntity.h" />
 		<Unit filename="include/CompuBrite/SFML/TProperty.h" />
+		<Unit filename="include/CompuBrite/SFML/TextEntity.h" />
+		<Unit filename="src/CompuBrite/SFML/CircleEntity.cpp" />
+		<Unit filename="src/CompuBrite/SFML/CollisionSystem.cpp" />
+		<Unit filename="src/CompuBrite/SFML/ConvexEntity.cpp" />
 		<Unit filename="src/CompuBrite/SFML/DrawingSystem.cpp" />
 		<Unit filename="src/CompuBrite/SFML/Engine.cpp" />
 		<Unit filename="src/CompuBrite/SFML/EventManager.cpp" />
 		<Unit filename="src/CompuBrite/SFML/IEntity.cpp" />
+		<Unit filename="src/CompuBrite/SFML/IShapeEntity.cpp" />
 		<Unit filename="src/CompuBrite/SFML/ISystem.cpp" />
 		<Unit filename="src/CompuBrite/SFML/MovementSystem.cpp" />
 		<Unit filename="src/CompuBrite/SFML/PropertyManager.cpp" />
+		<Unit filename="src/CompuBrite/SFML/RectangleEntity.cpp" />
+		<Unit filename="src/CompuBrite/SFML/SpriteEntity.cpp" />
+		<Unit filename="src/CompuBrite/SFML/TextEntity.cpp" />
 		<Unit filename="test.cpp">
 			<Option target="test" />
 		</Unit>

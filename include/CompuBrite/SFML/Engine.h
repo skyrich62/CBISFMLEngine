@@ -3,7 +3,7 @@
 
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <CompuBrite/SFML/EventManager.h>
-#include <CompuBrite/SFML/ISystem.h>
+#include <CompuBrite/SFML/StateStack.h>
 
 namespace CompuBrite
 {
@@ -18,10 +18,11 @@ public:
     void run(sf::RenderWindow &target);
 
     void addEvent(const sf::Event &event, EventManager::Command command);
-    void addSystem(ISystem &system);
+    StateStack &stack()                      { return stack_; }
 private:
     EventManager events_;
-    std::vector<ISystem*> systems_;
+    StateStack   stack_;
+
 };
 
 } // namespace SFML

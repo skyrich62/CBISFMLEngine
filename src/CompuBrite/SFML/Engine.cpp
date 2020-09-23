@@ -9,10 +9,14 @@ namespace SFML {
 void
 Engine::run(sf::RenderWindow &target)
 {
+    if (stack().empty()) {
+        return;
+    }
     sf::Clock clock;
 	// Start the game loop
     while (target.isOpen())
     {
+        auto elapsed = clock.restart();
         // Process events
         sf::Event event;
         while (target.pollEvent(event))
@@ -23,10 +27,8 @@ Engine::run(sf::RenderWindow &target)
         // Clear screen
         target.clear();
 
-        for (auto system : systems_) {
-            system->update(clock.restart());
-            target.draw(*system);
-        }
+        target.draw(stack_);
+        stack_.update(elapsed);
 
         // Update the window
         target.display();
@@ -38,12 +40,6 @@ void
 Engine::addEvent(const sf::Event &event, EventManager::Command command)
 {
     events_.add(event, command);
-}
-
-void
-Engine::addSystem(ISystem &system)
-{
-    systems_.push_back(&system);
 }
 
 } // namespace SFML
