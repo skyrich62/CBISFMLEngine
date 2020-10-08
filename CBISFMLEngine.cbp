@@ -26,6 +26,9 @@
 				<Option projectLinkerOptionsRelation="-1" />
 				<Option projectIncludeDirsRelation="-1" />
 				<Option projectLibDirsRelation="-1" />
+				<Compiler>
+					<Add directory="include" />
+				</Compiler>
 				<MakeCommands>
 					<Build command="" />
 					<CompileFile command="" />
@@ -103,6 +106,8 @@
 		<Unit filename="include/CompuBrite/SFML/RectangleEntity.h" />
 		<Unit filename="include/CompuBrite/SFML/ResourceManager.h" />
 		<Unit filename="include/CompuBrite/SFML/SpriteEntity.h" />
+		<Unit filename="include/CompuBrite/SFML/State.h" />
+		<Unit filename="include/CompuBrite/SFML/StateStack.h" />
 		<Unit filename="include/CompuBrite/SFML/TProperty.h" />
 		<Unit filename="include/CompuBrite/SFML/TextEntity.h" />
 		<Unit filename="src/CompuBrite/SFML/CircleEntity.cpp" />
@@ -118,6 +123,8 @@
 		<Unit filename="src/CompuBrite/SFML/PropertyManager.cpp" />
 		<Unit filename="src/CompuBrite/SFML/RectangleEntity.cpp" />
 		<Unit filename="src/CompuBrite/SFML/SpriteEntity.cpp" />
+		<Unit filename="src/CompuBrite/SFML/State.cpp" />
+		<Unit filename="src/CompuBrite/SFML/StateStack.cpp" />
 		<Unit filename="src/CompuBrite/SFML/TextEntity.cpp" />
 		<Unit filename="test.cpp">
 			<Option target="test" />

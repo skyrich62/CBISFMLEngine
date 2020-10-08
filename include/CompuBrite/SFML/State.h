@@ -26,6 +26,9 @@ public:
     void addSystem(ISystem &system);
     void dropSystem(ISystem &system);
 
+    void lastDrawn(bool b)                  { lastDrawn_ = b; }
+    void lastUpdated(bool b)                { lastUpdated_ = b; }
+
 private:
     std::vector<ISystem*> systems_;
     bool                  lastDrawn_ = false;
