@@ -35,13 +35,14 @@ namespace SFML {
 void
 Engine::run(sf::RenderWindow &target)
 {
-    if (stack().empty()) {
-        return;
-    }
+
     sf::Clock clock;
 	// Start the game loop
     while (target.isOpen())
     {
+        if (stack().empty()) {
+            return;
+        }
         auto elapsed = clock.restart();
         // Process events
         sf::Event event;
