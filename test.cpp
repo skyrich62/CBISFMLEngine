@@ -337,18 +337,27 @@ int main()
                          engine.stack().pop();
                 } );
 
-   sf::RenderWindow app(sf::VideoMode(800, 600), "Demo Window");
-   app.setFramerateLimit(60);
-   engine.addEvent({sf::Event::Closed},
-               [&app](const sf::Event &) {
-                   app.close();
+    // Closing the app window will cause the engine to stop by clearing the
+    // state stack.
+    engine.addEvent({sf::Event::Closed},
+               [&engine](const sf::Event &) {
+                   engine.stack().clear();
                } );
+
+    // ESC key will cause the engine to stop by clearing the state stack.
     engine.addEvent({sf::Event::KeyReleased, {sf::Keyboard::Escape}},
-               [&app](const sf::Event &) {
-                    app.close();
+               [&engine](const sf::Event &) {
+                    engine.stack().clear();
                 } );
 
+    // Push the main state.
     engine.stack().push(mainState);
+
+    // Create an application window and throttle the frame rate.
+    sf::RenderWindow app(sf::VideoMode(800, 600), "Demo Window");
+    app.setFramerateLimit(60);
+
+    // Run the engine on the application window.
     engine.run(app);
 
     return EXIT_SUCCESS;
