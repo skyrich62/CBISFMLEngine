@@ -80,6 +80,10 @@ public:
     /// We want the pause state to update, but not the rest of the states.
     void update(sf::Time dt);
 
+    /// Dispatch an event through the stack.
+    /// @param event The event to dispatch
+    void dispatch(const sf::Event &event);
+
 private:
     std::vector<State *> states_;
 };

@@ -32,6 +32,7 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/System/Time.hpp>
 
+#include <CompuBrite/SFML/EventManager.h>
 
 namespace CompuBrite
 {
@@ -53,7 +54,9 @@ public:
     /// stop.
     /// @param lastDrawn true if this should be the last drawn state in the stack.
     /// @param latUpdated true if this should be the last updated state.
-    State(bool lastDrawn, bool lastUpdated);
+    /// @param lastDispatched true if this should be the last state which
+    /// dispatches events.
+    State(bool lastDrawn, bool lastUpdated, bool lastDispatched);
 
     virtual ~State() = default;
 
@@ -71,6 +74,18 @@ public:
     /// Drop an ISystem from this state.
     void dropSystem(ISystem &system);
 
+    /// Add a handler for an event.  If the given event is detected, then
+    /// dispatch to the given callback handler.
+    /// @param event The sf::Event object to detect.
+    /// @param command The handler callback for that event.
+    void addEvent(const sf::Event &event, EventManager::Command command);
+
+    /// Dispatch an event, if it has been registered with addEvent().
+    /// @param event The event to dispatch
+    /// @return true if processing should stop after this, false if processing
+    /// should continue with other states on the stack.
+    bool dispatch(const sf::Event &event);
+
     /// Change lastDrawn
     /// @param b True if this should be the last drawn state in its stack.
     void lastDrawn(bool b)                  { lastDrawn_ = b; }
@@ -79,10 +94,17 @@ public:
     /// @param b True if this should be the last updated state in its stack.
     void lastUpdated(bool b)                { lastUpdated_ = b; }
 
+    /// Change lastDispatched
+    /// @param b True if this state should not allow further state processing
+    /// of events.
+    void lastDispatched(bool b)             { lastDispatched_ = b; }
+
 private:
     std::vector<ISystem*> systems_;
+    EventManager          events_;
     bool                  lastDrawn_ = false;
     bool                  lastUpdated_ = false;
+    bool                  lastDispatched_ = false;
 };
 
 } // namespace SFML

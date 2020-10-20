@@ -30,9 +30,10 @@
 namespace CompuBrite {
 namespace SFML {
 
-State::State(bool lastDrawn, bool lastUpdated) :
+State::State(bool lastDrawn, bool lastUpdated, bool lastDispatched) :
     lastDrawn_(lastDrawn),
-    lastUpdated_(lastUpdated)
+    lastUpdated_(lastUpdated),
+    lastDispatched_(lastDispatched)
 {
 }
 
@@ -68,6 +69,19 @@ State::dropSystem(ISystem &system)
         return;
     }
     systems_.erase(found);
+}
+
+void
+State::addEvent(const sf::Event &event, EventManager::Command command)
+{
+    events_.add(event, command);
+}
+
+bool
+State::dispatch(const sf::Event &event)
+{
+    events_.dispatch(event);
+    return lastDispatched_;
 }
 
 } // namespace SFML

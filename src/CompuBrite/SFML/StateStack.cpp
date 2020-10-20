@@ -27,6 +27,8 @@
 #include "CompuBrite/SFML/State.h"
 #include "CompuBrite/SFML/StateStack.h"
 
+#include <iostream>
+
 namespace CompuBrite {
 namespace SFML {
 
@@ -63,9 +65,21 @@ StateStack::clear()
 }
 
 void
-StateStack::draw(sf::RenderTarget &target, sf::RenderStates states) const
+StateStack::dispatch(const sf::Event &event)
 {
     std::vector<State*> temp(states_.rbegin(), states_.rend());
+    for (auto state: temp) {
+        auto stop = state->dispatch(event);
+        if (stop) {
+            break;
+        }
+    }
+}
+
+void
+StateStack::draw(sf::RenderTarget &target, sf::RenderStates states) const
+{
+    std::vector<State*> temp(states_.begin(), states_.end());
     for (auto state: temp) {
         auto stop = state->draw(target, states);
         if (stop) {

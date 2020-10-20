@@ -47,6 +47,7 @@ Engine::run(sf::RenderWindow &target)
         sf::Event event;
         while (target.pollEvent(event))
         {
+            stack_.dispatch(event);
             events_.dispatch(event);
         }
 

@@ -49,6 +49,8 @@ enum class Fonts {Vera};
 auto offset = 100.0f;
 auto level = cbisf::CollisionSystem::SAT;
 
+cbisf::ResourceManager<Fonts, sf::Font> fontManager;
+
 class StatusSystem : public cbisf::ISystem
 {
 public:
@@ -123,18 +125,81 @@ ResetColorSystem::update(sf::Time dt)
     }
 }
 
+class BlinkingSystem : public cbisf::ISystem
+{
+public:
+    BlinkingSystem() = default;
+    ~BlinkingSystem() = default;
+    void update(sf::Time dt);
+    bool blink() const                      { return blink_; }
+private:
+    sf::Time elapsed_;
+    bool     blink_;
+};
+
+
+
+class PausedState : public cbisf::State
+{
+public:
+    PausedState();
+    ~PausedState() = default;
+
+    bool update(sf::Time dt) override;
+    bool draw(sf::RenderTarget &target, sf::RenderStates states) const override;
+
+private:
+    sf::Time             elapsed_ = sf::Time::Zero;
+    bool                 blink_;
+};
+
+PausedState::PausedState() :
+    State(false, true, true)
+{
+}
+
+bool
+PausedState::update(sf::Time dt)
+{
+    elapsed_ += dt;
+    if (elapsed_.asSeconds() > 0.5f) {
+        elapsed_ = sf::Time::Zero;
+        blink_ = !blink_;
+    }
+    return true;
+}
+
+bool
+PausedState::draw(sf::RenderTarget &target, sf::RenderStates states) const
+{
+    cbisf::RectangleEntity background;
+    background.setFillColor({0, 0, 0, 127});
+    sf::Vector2f size(target.getSize());
+    background.setSize(size);
+    background.setOrigin(size / 2.0f);
+    background.setPosition(size / 2.0f);
+
+    target.draw(background);
+    if (blink_) {
+        cbisf::TextEntity paused("Paused - Press 'P' to continue",
+                                 fontManager.get(Fonts::Vera), 25);
+        paused.setFillColor(sf::Color::Red);
+        auto bounds = paused.getLocalBounds();
+        sf::Vector2f sizeText(bounds.width, bounds.height);
+        paused.setOrigin(sizeText / 2.0f);
+        paused.setPosition(size / 2.0f);
+        target.draw(paused);
+    }
+    return false;
+}
+
 int main()
 {
-    sf::RenderWindow app(sf::VideoMode(800, 600), "Demo Window");
-    app.setFramerateLimit(60);
-
     cbisf::ResourceManager<Textures, sf::Texture> textureManager;
     if (!textureManager.load(Textures::Block, "cb.bmp")) {
         cbi::CheckPoint::hit(CBI_HERE, "Can't load cbi.bmp");
         return 5;
     }
-
-    cbisf::ResourceManager<Fonts, sf::Font> fontManager;
 
     if (!fontManager.load(Fonts::Vera, "C:/Users/rnewman/AppData/Local/Microsoft/Windows/Fonts/VeraSe.ttf")) {
         cbi::CheckPoint::hit(CBI_HERE, "Can't load Vera font");
@@ -206,54 +271,84 @@ int main()
     rs.addEntity(rect);
 
     cbisf::Engine engine;
-    cbisf::State state;
+    cbisf::State mainState;
+    PausedState pausedState;
 
-    state.addSystem(ms);
-    state.addSystem(ss);
-    state.addSystem(cs);
-    state.addSystem(ds);
-    state.addSystem(rs);
+    mainState.addSystem(ms);
+    mainState.addSystem(ss);
+    mainState.addSystem(cs);
+    mainState.addSystem(ds);
+    mainState.addSystem(rs);
 
-    engine.stack().push(state);
-
-    engine.addEvent({sf::Event::KeyReleased, {sf::Keyboard::Up}},
+    // Up key causes the child to rotate clockwise.
+    mainState.addEvent({sf::Event::KeyReleased, {sf::Keyboard::Up}},
                [&child](const sf::Event &e) {
                    child.properties.ref<float>("rotation") += 10.0f;
                } );
-    engine.addEvent({sf::Event::KeyReleased, {sf::Keyboard::Down}},
+
+    // Down key causes the child to rotate counter-clockwise
+    mainState.addEvent({sf::Event::KeyReleased, {sf::Keyboard::Down}},
                [&child](const sf::Event &e) {
                    child.properties.ref<float>("rotation") -= 10.0f;
                } );
-    engine.addEvent({sf::Event::KeyReleased, {sf::Keyboard::PageUp}},
+
+    // PageUp causes the main entity to rotate counter-clockwise
+    mainState.addEvent({sf::Event::KeyReleased, {sf::Keyboard::PageUp}},
                [&entity](const sf::Event &e) {
                    entity.properties.ref<float>("rotation") -= 10.0f;
                } );
-    engine.addEvent({sf::Event::KeyReleased, {sf::Keyboard::PageDown}},
+
+    // PageDown causes the main entity to rotate clockwise.
+    mainState.addEvent({sf::Event::KeyReleased, {sf::Keyboard::PageDown}},
                [&entity](const sf::Event &e) {
                    entity.properties.ref<float>("rotation") += 10.0f;
                } );
-    engine.addEvent({sf::Event::KeyPressed, {sf::Keyboard::Right}},
+
+    // Right arrow key causes the child to move to the right along the relative
+    // x axis.  (This will be affected by main entity rotation)
+    mainState.addEvent({sf::Event::KeyPressed, {sf::Keyboard::Right}},
                [&child](const sf::Event &e) {
                    child.move(10.0f, 0.0f);
                } );
-    engine.addEvent({sf::Event::KeyPressed, {sf::Keyboard::Left}},
+
+    // Left arrow key causes the child to move to the left along the relative
+    // x axis, (This will be affected by main entity rotation)
+    mainState.addEvent({sf::Event::KeyPressed, {sf::Keyboard::Left}},
                [&child](const sf::Event &e) {
                    child.move(-10.0f, 0.0f);
                } );
-    engine.addEvent({sf::Event::Closed},
+
+    // Space bar will stop all rotations.
+    mainState.addEvent({sf::Event::KeyReleased, {sf::Keyboard::Space}},
+               [&entity,&child](const sf::Event &) {
+                    entity.properties.set<float>("rotation", 0.0f);
+                    child.properties.set<float>("rotation", 0.0f);
+                } );
+
+    // P key will cause a pause screen to overlay the main
+    mainState.addEvent({sf::Event::KeyReleased, {sf::Keyboard::P}},
+               [&engine, &pausedState](const sf::Event &) {
+                       engine.stack().push(pausedState);
+                } );
+
+    // P key while paused will resume normal operations.
+    pausedState.addEvent({sf::Event::KeyReleased, {sf::Keyboard::P}},
+                [&engine] (const sf::Event &) {
+                         engine.stack().pop();
+                } );
+
+   sf::RenderWindow app(sf::VideoMode(800, 600), "Demo Window");
+   app.setFramerateLimit(60);
+   engine.addEvent({sf::Event::Closed},
                [&app](const sf::Event &) {
                    app.close();
                } );
     engine.addEvent({sf::Event::KeyReleased, {sf::Keyboard::Escape}},
                [&app](const sf::Event &) {
                     app.close();
-                });
-    engine.addEvent({sf::Event::KeyReleased, {sf::Keyboard::Space}},
-               [&entity,&child](const sf::Event &) {
-                    entity.properties.set<float>("rotation", 0.0f);
-                    child.properties.set<float>("rotation", 0.0f);
-                });
+                } );
 
+    engine.stack().push(mainState);
     engine.run(app);
 
     return EXIT_SUCCESS;
