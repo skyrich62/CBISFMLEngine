@@ -36,10 +36,7 @@ operator<<(std::ostream &os, const sf::Vector2f &v)
     return os;
 }
 
-namespace CompuBrite
-{
-namespace SFML
-{
+namespace CompuBrite::SFML {
 
 static bool
 satRectangleAndPoints(const sf::Vector2f &rectangleSize,
@@ -219,5 +216,4 @@ CollisionSystem::checkCollisions() const
 
 }
 
-} // namespace SFML
-} // namespace CompuBrite
+} // namespace CompuBrite::SFML

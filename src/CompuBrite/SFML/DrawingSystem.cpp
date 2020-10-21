@@ -30,8 +30,7 @@
 
 #include <map>
 
-namespace CompuBrite {
-namespace SFML {
+namespace CompuBrite::SFML {
 
 DrawingSystem::DrawingSystem(bool boundingBoxes) :
     ISystem(),
@@ -61,5 +60,4 @@ DrawingSystem::draw(sf::RenderTarget &target, sf::RenderStates states) const
     }
 }
 
-} // namespace SFML
-} // namespace CompuBrite
+} // namespace CompuBrite::SFML

@@ -31,10 +31,7 @@
 
 #include <SFML/Graphics/Text.hpp>
 
-namespace CompuBrite
-{
-namespace SFML
-{
+namespace CompuBrite::SFML {
 
 /// Encapsulates a sf::Text object and brings it under the IEntity framework.
 class TextEntity : public CompuBrite::SFML::IEntity
@@ -87,7 +84,6 @@ private:
     sf::Text text_;
 };
 
-} // namespace SFML
-} // namespace CompuBrite
+} // namespace CompuBrite::SFML
 
 #endif // COMPUBRITE_SFML_TEXTENTITY_H

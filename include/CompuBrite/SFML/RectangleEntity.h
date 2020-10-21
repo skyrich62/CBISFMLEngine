@@ -30,10 +30,7 @@
 #include <CompuBrite/SFML/IShapeEntity.h>
 #include <SFML/Graphics/RectangleShape.hpp>
 
-namespace CompuBrite
-{
-namespace SFML
-{
+namespace CompuBrite::SFML {
 
 /// Encapsulate a sf::RectangleShape and bind it to an IEntity object for
 /// drawing and transforming it.
@@ -61,7 +58,6 @@ private:
     sf::RectangleShape rectangle_;
 };
 
-} // namespace SFML
-} // namespace CompuBrite
+} // namespace CompuBrite::SFML
 
 #endif // COMPUBRITE_SFML_RECTANGLEENTITY_H

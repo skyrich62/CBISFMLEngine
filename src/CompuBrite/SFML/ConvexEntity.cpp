@@ -25,8 +25,7 @@
 */
 #include "CompuBrite/SFML/ConvexEntity.h"
 
-namespace CompuBrite {
-namespace SFML {
+namespace CompuBrite::SFML {
 
 ConvexEntity::ConvexEntity(std::size_t pointCount) :
     IShapeEntity(shape_),
@@ -46,5 +45,4 @@ ConvexEntity::setPoint(std::size_t index, const sf::Vector2f &point)
     shape_.setPoint(index, point);
 }
 
-} // namespace SFML
-} // namespace CompuBrite
+} // namespace CompuBrite::SFML

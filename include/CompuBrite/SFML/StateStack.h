@@ -31,10 +31,7 @@
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/System/Time.hpp>
 
-namespace CompuBrite
-{
-namespace SFML
-{
+namespace CompuBrite::SFML {
 
 class State;
 class ISystem;
@@ -88,7 +85,6 @@ private:
     std::vector<State *> states_;
 };
 
-} // namespace SFML
-} // namespace CompuBrite
+} // namespace CompuBrite::SFML
 
 #endif // COMPUBRITE_SFML_STATESTACK_H

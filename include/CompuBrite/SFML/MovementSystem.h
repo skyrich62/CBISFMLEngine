@@ -29,10 +29,7 @@
 
 #include <CompuBrite/SFML/ISystem.h>
 
-namespace CompuBrite
-{
-namespace SFML
-{
+namespace CompuBrite::SFML {
 
 /// Specialization of ISystem for handling movement of IEntity objects.
 class MovementSystem : public CompuBrite::SFML::ISystem
@@ -59,7 +56,6 @@ private:
     void addProperties(IEntity &entity) override;
 };
 
-} // namespace SFML
-} // namespace CompuBrite
+} // namespace CompuBrite::SFML
 
 #endif // COMPUBRITE_SFML_MOVEMENTSYSTEM_H

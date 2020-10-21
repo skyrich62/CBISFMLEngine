@@ -30,10 +30,7 @@
 #include <CompuBrite/SFML/IEntity.h>
 #include <SFML/Graphics/Sprite.hpp>
 
-namespace CompuBrite
-{
-namespace SFML
-{
+namespace CompuBrite::SFML {
 
 /// Encapsulates sf::Sprite into the IEntity framework.
 class SpriteEntity : public CompuBrite::SFML::IEntity
@@ -92,7 +89,6 @@ private:
     sf::Sprite sprite_;
 };
 
-} // namespace SFML
-} // namespace CompuBrite
+} // namespace CompuBrite::SFML
 
 #endif // COMPUBRITE_SFML_SPRITEENTITY_H

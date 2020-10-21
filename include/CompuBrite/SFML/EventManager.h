@@ -32,10 +32,7 @@
 
 #include <SFML/Window/Event.hpp>
 
-namespace CompuBrite
-{
-namespace SFML
-{
+namespace CompuBrite::SFML {
 
 /// Used to compare two events, (useful for std::map).
 struct EventLess
@@ -79,7 +76,6 @@ private:
 
 };
 
-} // namespace SFML
-} // namespace CompuBrite
+} // namespace CompuBrite::SFML
 
 #endif // COMPUBRITE_SFML_EVENTMANAGER_H

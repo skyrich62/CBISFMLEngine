@@ -30,8 +30,7 @@
 #include "CompuBrite/SFML/IProperty.h"
 
 
-namespace CompuBrite {
-namespace SFML {
+namespace CompuBrite::SFML {
 
 /// A TProperty is a name / type / value tuple.  It is used to provide arbitrary
 /// properties into IEntity objects for use by the ISystem mechanism.
@@ -75,7 +74,6 @@ private:
     Type                  value_;
 };
 
-} // namespace SFML
-} // namespace CompuBrite
+} // namespace CompuBrite::SFML
 
 #endif // COMPUBRITE_SFML_TPROPERTY_H_INCLUDED

@@ -27,8 +27,7 @@
 #include "CompuBrite/SFML/State.h"
 #include "CompuBrite/SFML/ISystem.h"
 
-namespace CompuBrite {
-namespace SFML {
+namespace CompuBrite::SFML {
 
 State::State(bool lastDrawn, bool lastUpdated, bool lastDispatched) :
     lastDrawn_(lastDrawn),
@@ -84,5 +83,4 @@ State::dispatch(const sf::Event &event)
     return lastDispatched_;
 }
 
-} // namespace SFML
-} // namespace CompuBrite
+} // namespace CompuBrite::SFML

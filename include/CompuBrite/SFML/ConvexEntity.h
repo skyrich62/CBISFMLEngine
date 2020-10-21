@@ -30,10 +30,7 @@
 #include <CompuBrite/SFML/IShapeEntity.h>
 #include <SFML/Graphics/ConvexShape.hpp>
 
-namespace CompuBrite
-{
-namespace SFML
-{
+namespace CompuBrite::SFML {
 
 /// A ConvexEntity encapsulates sf::ConvexShape
 /// @see IEntity.
@@ -58,7 +55,6 @@ private:
     sf::ConvexShape shape_;
 };
 
-} // namespace SFML
-} // namespace CompuBrite
+} // namespace CompuBrite::SFML
 
 #endif // COMPUBRITE_SFML_CONVEXENTITY_H

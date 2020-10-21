@@ -26,8 +26,7 @@
 
 #include "CompuBrite/SFML/PropertyManager.h"
 
-namespace CompuBrite {
-namespace SFML {
+namespace CompuBrite::SFML {
 
 IProperty *PropertyManager::ifind(const std::string &name) const
 {
@@ -38,5 +37,4 @@ IProperty *PropertyManager::ifind(const std::string &name) const
     return found->second.get();
 }
 
-} // namespace SFML
-} // namespace CompuBrite
+} // namespace CompuBrite::SFML

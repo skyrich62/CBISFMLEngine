@@ -27,8 +27,7 @@
 #include "CompuBrite/SFML/TextEntity.h"
 #include <SFML/Graphics/RenderTarget.hpp>
 
-namespace CompuBrite {
-namespace SFML {
+namespace CompuBrite::SFML {
 
 TextEntity::TextEntity(const sf::String &string, const sf::Font &font, unsigned int size) :
     text_(string, font, size)
@@ -47,5 +46,4 @@ TextEntity::getLocalBounds() const
     return text_.getLocalBounds();
 }
 
-} // namespace SFML
-} // namespace CompuBrite
+} // namespace CompuBrite::SFML

@@ -33,10 +33,7 @@
 
 #include <vector>
 
-namespace CompuBrite
-{
-namespace SFML
-{
+namespace CompuBrite::SFML {
 
 /// ISystem is the common interface for managing various IEntity objects.
 /// An IEntity can be registered with multiple ISystem objects, and each
@@ -82,7 +79,6 @@ private:
     virtual void addProperties(IEntity &entity);
 };
 
-} // namespace SFML
-} // namespace CompuBrite
+} // namespace CompuBrite::SFML
 
 #endif // COMPUBRITE_SFML_ISYSTEM_H

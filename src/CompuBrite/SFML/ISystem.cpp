@@ -29,8 +29,7 @@
 
 #include <SFML/Graphics/RenderTarget.hpp>
 
-namespace CompuBrite {
-namespace SFML {
+namespace CompuBrite::SFML {
 
 ISystem::ISystem()
 {
@@ -82,5 +81,4 @@ ISystem::addProperties(IEntity &)
 {
 }
 
-} // namespace SFML
-} // namespace CompuBrite
+} // namespace CompuBrite::SFML

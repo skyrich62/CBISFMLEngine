@@ -30,10 +30,7 @@
 #include <CompuBrite/SFML/IShapeEntity.h>
 #include <SFML/Graphics/CircleShape.hpp>
 
-namespace CompuBrite
-{
-namespace SFML
-{
+namespace CompuBrite::SFML {
 
 /// A CircleEntity encapsulates sf::CircleShape.
 /// @see IEntity
@@ -63,7 +60,6 @@ private:
     sf::CircleShape circle_;
 };
 
-} // namespace SFML
-} // namespace CompuBrite
+} // namespace CompuBrite::SFML
 
 #endif // COMPUBRITE_SMFL_CIRCLEENTITY_H

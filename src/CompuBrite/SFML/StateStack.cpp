@@ -29,8 +29,7 @@
 
 #include <iostream>
 
-namespace CompuBrite {
-namespace SFML {
+namespace CompuBrite::SFML {
 
 void
 StateStack::push(State &state)
@@ -99,5 +98,4 @@ StateStack::update(sf::Time dt)
     }
 }
 
-} // namespace SFML
-} // namespace CompuBrite
+} // namespace CompuBrite::SFML

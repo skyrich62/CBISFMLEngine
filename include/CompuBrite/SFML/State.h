@@ -34,10 +34,7 @@
 
 #include <CompuBrite/SFML/EventManager.h>
 
-namespace CompuBrite
-{
-namespace SFML
-{
+namespace CompuBrite::SFML {
 class ISystem;
 
 /// Used to provide state information to the application.  The Engine object
@@ -107,7 +104,6 @@ private:
     bool                  lastDispatched_ = false;
 };
 
-} // namespace SFML
-} // namespace CompuBrite
+} // namespace CompuBrite::SFML
 
 #endif // COMPUBRITE_SFML_STATE_H

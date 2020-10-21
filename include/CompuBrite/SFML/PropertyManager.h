@@ -34,10 +34,7 @@
 #include <string>
 #include <memory>
 
-namespace CompuBrite
-{
-namespace SFML
-{
+namespace CompuBrite::SFML {
 
 /// PropertyManager is the means of extending a class by containing
 /// name / type / value tuples.
@@ -177,7 +174,6 @@ private:
     Properties properties_;
 };
 
-} // namespace SFML
-} // namespace CompuBrite
+} // namespace CompuBrite::SFML
 
 #endif // COMPUBRITE_SFML_PROPERTYMANAGER_H

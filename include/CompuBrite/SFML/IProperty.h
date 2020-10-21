@@ -30,10 +30,7 @@
 #include <string>
 #include <typeinfo>
 
-namespace CompuBrite
-{
-namespace SFML
-{
+namespace CompuBrite::SFML {
 
 /// IProperty is a base-class for TProperty.  A property is a name, type,
 /// value "tuple".
@@ -62,7 +59,6 @@ private:
     const std::type_info &type_;
 };
 
-} // namespace SFML
-} // namespace CompuBrite
+} // namespace CompuBrite::SFML
 
 #endif // COMPUBRITE_SFML_IPROPERTY_H

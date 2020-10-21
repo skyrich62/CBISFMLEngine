@@ -36,8 +36,7 @@
 #include <vector>
 #include <functional>
 
-namespace CompuBrite {
-namespace SFML {
+namespace CompuBrite::SFML {
 
 class ISystem;
 
@@ -165,7 +164,6 @@ public:
 
 };
 
-} // namespace SFML
-} // namespace CompuBrite
+} // namespace CompuBrite::SFML
 
 #endif // COMPUBRITE_SFML_ENTITY_H

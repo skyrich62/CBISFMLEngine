@@ -31,10 +31,7 @@
 #include <CompuBrite/SFML/EventManager.h>
 #include <CompuBrite/SFML/StateStack.h>
 
-namespace CompuBrite
-{
-namespace SFML
-{
+namespace CompuBrite::SFML {
 
 /// Encapsulates the main interface for the framework.  The Engine handles
 /// events, (keyboard, mouse, joystick, etc), holds the state stack, and
@@ -64,7 +61,6 @@ private:
 
 };
 
-} // namespace SFML
-} // namespace CompuBrite
+} // namespace CompuBrite::SFML
 
 #endif // COMPUBRITE_SFML_ENGINE_H

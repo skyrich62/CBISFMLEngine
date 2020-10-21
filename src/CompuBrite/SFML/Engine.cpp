@@ -29,8 +29,7 @@
 #include "SFML/System/Time.hpp"
 #include "SFML/System/Clock.hpp"
 
-namespace CompuBrite {
-namespace SFML {
+namespace CompuBrite::SFML {
 
 void
 Engine::run(sf::RenderWindow &target)
@@ -72,5 +71,4 @@ Engine::addEvent(const sf::Event &event, EventManager::Command command)
     events_.add(event, command);
 }
 
-} // namespace SFML
-} // namespace CompuBrite
+} // namespace CompuBrite::SFML

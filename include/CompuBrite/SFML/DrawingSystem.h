@@ -29,8 +29,7 @@
 
 #include <CompuBrite/SFML/ISystem.h>
 
-namespace CompuBrite {
-namespace SFML {
+namespace CompuBrite::SFML {
 
 /// A system to draw IEntity objects.  All IEntity objects added to this
 /// system will be drawn on the given target when the draw() method is called.
@@ -55,7 +54,6 @@ private:
     bool boundingBoxes_;
 };
 
-} // namespace SFML
-} // namespace CompuBrite
+} // namespace CompuBrite::SFML
 
 #endif // COMPUBRITE_SFML_DRAWINGSYSTEM_H

@@ -28,8 +28,7 @@
 
 #include <SFML/Graphics/RenderTarget.hpp>
 
-namespace CompuBrite {
-namespace SFML {
+namespace CompuBrite::SFML {
 
 IShapeEntity::IShapeEntity(sf::Shape &shape) :
     shape_(&shape)
@@ -121,6 +120,4 @@ IShapeEntity::getLocalBounds() const
     return shape_->getLocalBounds();
 }
 
-
-} // namespace SFML
-} // namespace CompuBrite
+} // namespace CompuBrite::SFML

@@ -27,8 +27,7 @@
 #include "CompuBrite/SFML/EventManager.h"
 #include "CompuBrite/CheckPoint.h"
 
-namespace CompuBrite {
-namespace SFML {
+namespace CompuBrite::SFML {
 
 bool
 EventLess::operator()(const sf::Event &lhs, const sf::Event &rhs)
@@ -74,5 +73,4 @@ EventManager::dispatch(const sf::Event &event)
     }
 }
 
-} // namespace SFML
-} // namespace CompuBrite
+} // namespace CompuBrite::SFML

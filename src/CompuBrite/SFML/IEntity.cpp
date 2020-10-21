@@ -29,8 +29,7 @@
 
 #include <map>
 
-namespace CompuBrite {
-namespace SFML {
+namespace CompuBrite::SFML {
 
 IEntity::~IEntity()
 {
@@ -159,5 +158,4 @@ IEntity::getGlobalBounds() const
 }
 
 
-} // namespace SFML
-} // namespace CompuBrite
+} // namespace CompuBrite::SFML

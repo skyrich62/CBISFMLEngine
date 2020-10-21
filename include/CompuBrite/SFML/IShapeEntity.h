@@ -31,10 +31,7 @@
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/Shape.hpp>
 
-namespace CompuBrite
-{
-namespace SFML
-{
+namespace CompuBrite::SFML {
 
 /// Forms the base class for CircleEntity, ConvexEntity, etc.
 /// This class provides all of the common interface methods for sf::Shape, and
@@ -113,7 +110,6 @@ private:
     sf::Shape *shape_;
 };
 
-} // namespace SFML
-} // namespace CompuBrite
+} // namespace CompuBrite::SFML
 
 #endif // COMPUBRITE_SFML_ISHAPEENTITY_H

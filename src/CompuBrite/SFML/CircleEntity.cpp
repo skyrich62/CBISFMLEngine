@@ -26,8 +26,7 @@
 
 #include "CompuBrite/SFML/CircleEntity.h"
 
-namespace CompuBrite {
-namespace SFML {
+namespace CompuBrite::SFML {
 
 CircleEntity::CircleEntity(float radius, std::size_t pointCount) :
     IShapeEntity(circle_),
@@ -53,5 +52,4 @@ CircleEntity::setPointCount(std::size_t count)
     circle_.setPointCount(count);
 }
 
-} // namespace SFML
-} // namespace CompuBrite
+} // namespace CompuBrite::SFML

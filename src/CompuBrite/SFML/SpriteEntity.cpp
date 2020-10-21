@@ -27,8 +27,7 @@
 #include "CompuBrite/SFML/SpriteEntity.h"
 #include <SFML/Graphics/RenderTarget.hpp>
 
-namespace CompuBrite {
-namespace SFML {
+namespace CompuBrite::SFML {
 
 SpriteEntity::SpriteEntity(int zOrder, const sf::Texture &texture) :
     IEntity(zOrder),
@@ -95,5 +94,4 @@ SpriteEntity::drawThis(sf::RenderTarget &target, sf::RenderStates states) const
 }
 
 
-} // namespace SFML
-} // namespace CompuBrite
+} // namespace CompuBrite::SFML

@@ -28,8 +28,7 @@
 
 #include <SFML/System/Vector2.hpp>
 
-namespace CompuBrite {
-namespace SFML {
+namespace CompuBrite::SFML {
 
 void
 MovementSystem::update(sf::Time dt)
@@ -60,5 +59,4 @@ MovementSystem::addProperties(IEntity &entity)
     entity.properties.add<float>("rot_accel");
 }
 
-} // namespace SFML
-} // namespace CompuBrite
+} // namespace CompuBrite::SFML

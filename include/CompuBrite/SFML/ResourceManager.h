@@ -33,10 +33,7 @@
 
 #include "CompuBrite/CheckPoint.h"
 
-namespace CompuBrite
-{
-namespace SFML
-{
+namespace CompuBrite::SFML {
 
 /// Manages arbitrary resources by assigning arbitrary identifiers to them.
 /// @tparam ID The type of the identifier to use.
@@ -116,7 +113,6 @@ private:
     std::map<ID, Ptr> resources_;
 };
 
-} // namespace SFML
-} // namespace CompuBrite
+} // namespace CompuBrite::SFML
 
 #endif // COMPUBRITE_SMFL_RESOURCEMANAGER_H

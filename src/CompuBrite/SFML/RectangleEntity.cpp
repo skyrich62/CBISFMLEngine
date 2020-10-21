@@ -26,8 +26,7 @@
 
 #include "CompuBrite/SFML/RectangleEntity.h"
 
-namespace CompuBrite {
-namespace SFML {
+namespace CompuBrite::SFML {
 
 RectangleEntity::RectangleEntity(const sf::Vector2f &size) :
     IShapeEntity(rectangle_),
@@ -47,5 +46,4 @@ RectangleEntity::getSize() const
     return rectangle_.getSize();
 }
 
-} // namespace SFML
-} // namespace CompuBrite
+} // namespace CompuBrite::SFML

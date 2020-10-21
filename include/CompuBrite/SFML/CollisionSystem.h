@@ -36,10 +36,7 @@
 #include <unordered_map>
 #include <functional>
 
-namespace CompuBrite
-{
-namespace SFML
-{
+namespace CompuBrite::SFML {
 
 /// Detect collisions between IEntity objects, and dispatch handlers to deal
 /// with the detected collisions.
@@ -158,7 +155,6 @@ private:
     Level level_;
 };
 
-} // namespace SFML
-} // namespace CompuBrite
+} // namespace CompuBrite::SFML
 
 #endif // COMPUBRITE_SFML_COLLISIONSYSTEM_H
