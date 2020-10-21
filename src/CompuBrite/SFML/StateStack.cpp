@@ -41,11 +41,10 @@ StateStack::push(State &state)
 State*
 StateStack::top() const
 {
-    auto size = states_.size();
-    if (size > 0u) {
-        return states_[size -1];
+    if (states_.empty()) {
+        return nullptr;
     }
-    return nullptr;
+    return states_.back();
 }
 
 State*

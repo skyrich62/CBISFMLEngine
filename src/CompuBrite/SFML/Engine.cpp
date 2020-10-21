@@ -46,19 +46,21 @@ Engine::run(sf::RenderWindow &target)
         auto elapsed = clock.restart();
         // Process events
         sf::Event event;
-        while (target.pollEvent(event))
-        {
+        while (target.pollEvent(event)) {
             stack_.dispatch(event);
             events_.dispatch(event);
         }
 
+        // Update the stack
+        stack_.update(elapsed);
+
         // Clear screen
         target.clear();
 
+         // Draw the stack
         target.draw(stack_);
-        stack_.update(elapsed);
 
-        // Update the window
+        // Display the window
         target.display();
     }
 
