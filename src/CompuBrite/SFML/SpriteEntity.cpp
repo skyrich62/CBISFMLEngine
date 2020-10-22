@@ -78,7 +78,7 @@ SpriteEntity::getTextureRect() const
 const sf::Color &
 SpriteEntity::getColor() const
 {
-    sprite_.getColor();
+    return sprite_.getColor();
 }
 
 sf::FloatRect

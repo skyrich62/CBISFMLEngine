@@ -43,7 +43,7 @@ CircleEntity::setRadius(float radius)
 float
 CircleEntity::getRadius() const
 {
-    circle_.getRadius();
+    return circle_.getRadius();
 }
 
 void
