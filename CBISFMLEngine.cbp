@@ -22,13 +22,8 @@
 				<Option type="2" />
 				<Option compiler="mingw_gcc-73_64-bit" />
 				<Option createDefFile="1" />
-				<Option projectCompilerOptionsRelation="-1" />
 				<Option projectLinkerOptionsRelation="-1" />
-				<Option projectIncludeDirsRelation="-1" />
 				<Option projectLibDirsRelation="-1" />
-				<Compiler>
-					<Add directory="include" />
-				</Compiler>
 				<MakeCommands>
 					<Build command="" />
 					<CompileFile command="" />
@@ -48,7 +43,6 @@
 				<Compiler>
 					<Add option="-O2" />
 					<Add option="-Wall" />
-					<Add directory="include" />
 				</Compiler>
 				<Linker>
 					<Add library="sfml-graphics" />
@@ -63,11 +57,8 @@
 				<Option compiler="mingw_gcc-73_64-bit" />
 				<Option use_console_runner="0" />
 				<Compiler>
-					<Add option="-std=c++17" />
-					<Add option="-std=c17" />
 					<Add option="-g" />
 					<Add option="-DCBI_CHECKPOINTS=1" />
-					<Add directory="include" />
 				</Compiler>
 				<Linker>
 					<Add library="sfml-graphics-d" />
@@ -89,6 +80,7 @@
 			<Add directory="C:/Users/rnewman/Documents/CodeBlocks/CBIUtil/include" />
 			<Add directory="C:/Users/rnewman/Documents/CodeBlocks/CBISFMLEngine/include" />
 			<Add directory="C:/SFML-2.5.1-windows-gcc-7.3.0-mingw-64-bit/SFML-2.5.1/include" />
+			<Add directory="include" />
 		</Compiler>
 		<Unit filename="cb.bmp" />
 		<Unit filename="include/CompuBrite/SFML/CircleEntity.h" />
