@@ -44,7 +44,8 @@ public:
 
     /// Run this Engine using the given target.
     /// @param target Where to draw all the IEntity objects.
-    void run(sf::RenderWindow &target);
+    /// @param timeSlice the desired frame rate.
+    void run(sf::RenderWindow &target, sf::Time timeSlice);
 
     /// Add a handler for an event.  If the given event is detected, then
     /// dispatch to the given callback handler.
@@ -55,6 +56,10 @@ public:
     /// @return A reference to the managed StateStack for use by the
     /// application.
     StateStack &stack()                      { return stack_; }
+
+private:
+    void processEvents(sf::RenderWindow &target);
+    void render(sf::RenderWindow &target);
 private:
     EventManager events_;
     StateStack   stack_;

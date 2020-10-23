@@ -28,41 +28,57 @@
 
 #include "SFML/System/Time.hpp"
 #include "SFML/System/Clock.hpp"
+#include "SFML/System/Sleep.hpp"
 
 namespace CompuBrite::SFML {
 
 void
-Engine::run(sf::RenderWindow &target)
+Engine::processEvents(sf::RenderWindow &target)
+{
+    sf::Event event;
+    while (target.pollEvent(event)) {
+        stack_.dispatch(event);
+        events_.dispatch(event);
+    }
+}
+
+void
+Engine::run(sf::RenderWindow &target, sf::Time timeSlice)
 {
 
     sf::Clock clock;
+    sf::Time  elapsed = sf::Time::Zero;
 	// Start the game loop
     while (target.isOpen())
     {
         if (stack().empty()) {
             return;
         }
-        auto elapsed = clock.restart();
-        // Process events
-        sf::Event event;
-        while (target.pollEvent(event)) {
-            stack_.dispatch(event);
-            events_.dispatch(event);
+
+        processEvents(target);
+
+        elapsed += clock.restart();
+        while (elapsed > timeSlice) {
+            elapsed -= timeSlice;
+            processEvents(target);
+            stack_.update(timeSlice);
         }
-
-        // Update the stack
-        stack_.update(elapsed);
-
-        // Clear screen
-        target.clear();
-
-         // Draw the stack
-        target.draw(stack_);
-
-        // Display the window
-        target.display();
+        render(target);
+        sf::sleep((timeSlice - elapsed) / 4.0f);
     }
+}
 
+void
+Engine::render(sf::RenderWindow &target)
+{
+    // Clear screen
+    target.clear();
+
+    // Draw the stack
+    target.draw(stack_);
+
+    // Display the window
+    target.display();
 }
 
 void

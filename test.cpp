@@ -150,7 +150,7 @@ public:
 
 private:
     sf::Time             elapsed_ = sf::Time::Zero;
-    bool                 blink_;
+    bool                 blink_ = true;
 };
 
 PausedState::PausedState() :
@@ -172,22 +172,27 @@ PausedState::update(sf::Time dt)
 bool
 PausedState::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {
-    cbisf::RectangleEntity background;
-    background.setFillColor({0, 0, 0, 127});
-    sf::Vector2f size(target.getSize());
-    background.setSize(size);
-    background.setOrigin(size / 2.0f);
-    background.setPosition(size / 2.0f);
+    static cbisf::RectangleEntity background;
+    static cbisf::TextEntity paused("Paused - Press 'P' to continue",
+                                    fontManager.get(Fonts::Vera), 25);
+    static auto once = true;
 
-    target.draw(background);
-    if (blink_) {
-        cbisf::TextEntity paused("Paused - Press 'P' to continue",
-                                 fontManager.get(Fonts::Vera), 25);
+    if (once) {
+        background.setFillColor({0, 0, 0, 127});
+        sf::Vector2f size(target.getSize());
+        background.setSize(size);
+        background.setOrigin(size / 2.0f);
+        background.setPosition(size / 2.0f);
         paused.setFillColor(sf::Color::Red);
         auto bounds = paused.getLocalBounds();
         sf::Vector2f sizeText(bounds.width, bounds.height);
         paused.setOrigin(sizeText / 2.0f);
         paused.setPosition(size / 2.0f);
+        once = false;
+    }
+
+    target.draw(background);
+    if (blink_) {
         target.draw(paused);
     }
     return false;
@@ -355,10 +360,9 @@ int main()
 
     // Create an application window and throttle the frame rate.
     sf::RenderWindow app(sf::VideoMode(800, 600), "Demo Window");
-    app.setFramerateLimit(60);
 
     // Run the engine on the application window.
-    engine.run(app);
+    engine.run(app, sf::seconds(1.0f / 60.0f));
 
     return EXIT_SUCCESS;
 }
