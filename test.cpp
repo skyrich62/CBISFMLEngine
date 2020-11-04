@@ -54,21 +54,24 @@ cbisf::ResourceManager<Fonts, sf::Font> fontManager;
 class StatusSystem : public cbisf::ISystem
 {
 public:
-    StatusSystem(cbisf::TextEntity &status) :
-        status_(status),
-        elapsed_(sf::Time::Zero)
-    { }
+    StatusSystem();
     ~StatusSystem() = default;
 
     void addProperties(cbisf::IEntity &) override;
-
     void update(sf::Time dt) override;
-
     bool collision_ = false;
+
+    cbisf::TextEntity& status()             { return status_; }
 private:
-    cbisf::TextEntity &status_;
+    cbisf::TextEntity status_;
     sf::Time elapsed_;
 };
+
+StatusSystem::StatusSystem() :
+    status_("", fontManager.get(Fonts::Vera), 15),
+    elapsed_(sf::Time::Zero)
+{
+}
 
 void
 StatusSystem::addProperties(cbisf::IEntity &entity)
@@ -125,20 +128,6 @@ ResetColorSystem::update(sf::Time dt)
     }
 }
 
-class BlinkingSystem : public cbisf::ISystem
-{
-public:
-    BlinkingSystem() = default;
-    ~BlinkingSystem() = default;
-    void update(sf::Time dt);
-    bool blink() const                      { return blink_; }
-private:
-    sf::Time elapsed_;
-    bool     blink_;
-};
-
-
-
 class PausedState : public cbisf::State
 {
 public:
@@ -149,8 +138,8 @@ public:
     bool draw(sf::RenderTarget &target, sf::RenderStates states) const override;
 
 private:
-    sf::Time             elapsed_ = sf::Time::Zero;
-    bool                 blink_ = true;
+    sf::Time elapsed_ = sf::Time::Zero;
+    bool     blink_ = true;
 };
 
 PausedState::PausedState() :
@@ -225,8 +214,7 @@ int main()
     entity.addChild(child);
     pos = child.getGlobalPosition();
 
-    cbisf::TextEntity status("***", fontManager.get(Fonts::Vera), 15);
-    StatusSystem ss(status);
+    StatusSystem ss;
     ss.addEntity(entity);
     ss.addEntity(child);
     entity.properties.set<std::string>("name", "parent");
@@ -238,7 +226,7 @@ int main()
 
     cbisf::DrawingSystem ds;
     ds.addEntity(entity);
-    ds.addEntity(status);
+    ds.addEntity(ss.status());
 
     cbisf::CollisionSystem cs(level);
     cs.addHandler<cbisf::SpriteEntity, cbisf::SpriteEntity>(
