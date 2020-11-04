@@ -43,28 +43,32 @@ Engine::processEvents(sf::RenderWindow &target)
 }
 
 void
+Engine::update(sf::RenderWindow &target)
+{
+    processEvents(target);
+    elapsed_ += clock_.restart();
+    while (elapsed_ > timeSlice_) {
+        elapsed_ -= timeSlice_;
+        processEvents(target);
+        stack_.update(timeSlice_);
+    }
+}
+
+void
 Engine::run(sf::RenderWindow &target, sf::Time timeSlice)
 {
+    elapsed_ = sf::Time::Zero;
+    timeSlice_ = timeSlice;
 
-    sf::Clock clock;
-    sf::Time  elapsed = sf::Time::Zero;
 	// Start the game loop
     while (target.isOpen())
     {
         if (stack().empty()) {
             return;
         }
-
-        processEvents(target);
-
-        elapsed += clock.restart();
-        while (elapsed > timeSlice) {
-            elapsed -= timeSlice;
-            processEvents(target);
-            stack_.update(timeSlice);
-        }
+        update(target);
         render(target);
-        sf::sleep((timeSlice - elapsed) / 4.0f);
+        sf::sleep((timeSlice_ - elapsed_) / 4.0f);
     }
 }
 
