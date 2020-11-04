@@ -82,6 +82,9 @@ public:
     void dispatch(const sf::Event &event);
 
 private:
+    void deactivate();
+    void activate();
+
     std::vector<State *> states_;
 };
 

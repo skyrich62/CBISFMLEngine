@@ -83,4 +83,24 @@ State::dispatch(const sf::Event &event)
     return lastDispatched_;
 }
 
+void
+State::onPush()
+{
+}
+
+void
+State::onPop()
+{
+}
+
+void
+State::onActivation()
+{
+}
+
+void
+State::onDeactivation()
+{
+}
+
 } // namespace CompuBrite::SFML

@@ -34,7 +34,10 @@ namespace CompuBrite::SFML {
 void
 StateStack::push(State &state)
 {
+    deactivate();
     states_.push_back(&state);
+    state.onPush();
+    activate();
 }
 
 State*
@@ -49,16 +52,23 @@ StateStack::top() const
 State*
 StateStack::pop()
 {
+    deactivate();
     auto ret = top();
     if (ret) {
         states_.pop_back();
+        ret->onPop();
     }
+    activate();
     return ret;
 }
 
 void
 StateStack::clear()
 {
+    deactivate();
+    for (auto state: states_) {
+        state->onPop();
+    }
     states_.clear();
 }
 
@@ -95,6 +105,22 @@ StateStack::update(sf::Time dt)
         if (stop) {
             break;
         }
+    }
+}
+
+void
+StateStack::activate()
+{
+    if (auto state = top(); state) {
+        state->onActivation();
+    }
+}
+
+void
+StateStack::deactivate()
+{
+    if (auto state = top(); state) {
+        state->onDeactivation();
     }
 }
 

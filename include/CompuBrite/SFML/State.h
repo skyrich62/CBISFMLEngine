@@ -65,6 +65,30 @@ public:
     /// systems registered to this State.
     virtual bool update(sf::Time dt);
 
+    /// Called by StateStack::push() when this state is pushed onto the stack.
+    /// By default this function does nothing.  Override in derived classes
+    /// for desired functionality.
+    virtual void onPush();
+
+    /// Called by StateStack::pop(), and StateStack::clear() when this state
+    /// is popped off the stack, (or the stack is cleared).
+    /// By default this function does nothing.  Override in derived classes
+    /// for desired functionality.
+    virtual void onPop();
+
+    /// Called by StateStack::pop(), and StateStack::push() when this state
+    /// now at the top of the stack.
+    /// By default this function does nothing.  Override in derived classes
+    /// for desired functionality.
+    virtual void onActivation();
+
+    /// Called by StateStack::push(), StateStack::pop(), and StateStack::clear()
+    /// when this state is no longer on the top of the stack, (or the stack has
+    /// has been cleared.
+    /// By default this function does nothing.  Override in derived classes
+    /// for desired functionality.
+    virtual void onDeactivation();
+
     /// Add an ISystem to this state.
     void addSystem(ISystem &system);
 
