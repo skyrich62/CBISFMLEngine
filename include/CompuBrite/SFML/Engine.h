@@ -59,11 +59,15 @@ public:
 
 private:
     void processEvents(sf::RenderWindow &target);
+    void update(sf::RenderWindow &target);
     void render(sf::RenderWindow &target);
+
 private:
     EventManager events_;
     StateStack   stack_;
-
+    sf::Clock    clock_;
+    sf::Time     elapsed_;
+    sf::Time     timeSlice_;
 };
 
 } // namespace CompuBrite::SFML
