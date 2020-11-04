@@ -267,11 +267,12 @@ int main()
     cbisf::State mainState;
     PausedState pausedState;
 
-    mainState.addSystem(ms);
-    mainState.addSystem(ss);
-    mainState.addSystem(cs);
-    mainState.addSystem(ds);
     mainState.addSystem(rs);
+    mainState.addSystem(ms);
+    mainState.addSystem(cs);
+    mainState.addSystem(ss);
+    mainState.addSystem(ds);
+
 
     // Up key causes the child to rotate clockwise.
     mainState.addEvent({sf::Event::KeyReleased, {sf::Keyboard::Up}},
