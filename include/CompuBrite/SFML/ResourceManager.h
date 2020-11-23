@@ -96,6 +96,24 @@ public:
         return true;
     }
 
+    bool enroll(const ID &id, std::unique_ptr<Resource>&& res)
+    {
+        if (find(id)) {
+            return false;
+        }
+        resources_[id] = std::move(res);
+    }
+
+    template<typename Derived, typename ...Args>
+    bool enroll(const ID &id, Args &&...args)
+    {
+        if (find(id)) {
+            return false;
+        }
+        auto res = std::make_unique<Derived>(args...);
+        resources_[id] = std::move(res);
+        return true;
+    }
 private:
     /// Fine the given resource if it exists.
     /// @param id The identifier to look for.
