@@ -276,72 +276,72 @@ int main()
 
     // Up key causes the child to rotate clockwise.
     mainState.addEvent({sf::Event::KeyReleased, {sf::Keyboard::Up}},
-               [&child](const sf::Event &e) {
+               [&child](const sf::Event &e, cbisf::StateStack &) {
                    child.properties.ref<float>("rotation") += 10.0f;
                } );
 
     // Down key causes the child to rotate counter-clockwise
     mainState.addEvent({sf::Event::KeyReleased, {sf::Keyboard::Down}},
-               [&child](const sf::Event &e) {
+               [&child](const sf::Event &e, cbisf::StateStack &) {
                    child.properties.ref<float>("rotation") -= 10.0f;
                } );
 
     // PageUp causes the main entity to rotate counter-clockwise
     mainState.addEvent({sf::Event::KeyReleased, {sf::Keyboard::PageUp}},
-               [&entity](const sf::Event &e) {
+               [&entity](const sf::Event &e, cbisf::StateStack &) {
                    entity.properties.ref<float>("rotation") -= 10.0f;
                } );
 
     // PageDown causes the main entity to rotate clockwise.
     mainState.addEvent({sf::Event::KeyReleased, {sf::Keyboard::PageDown}},
-               [&entity](const sf::Event &e) {
+               [&entity](const sf::Event &e, cbisf::StateStack &) {
                    entity.properties.ref<float>("rotation") += 10.0f;
                } );
 
     // Right arrow key causes the child to move to the right along the relative
     // x axis.  (This will be affected by main entity rotation)
     mainState.addEvent({sf::Event::KeyPressed, {sf::Keyboard::Right}},
-               [&child](const sf::Event &e) {
+               [&child](const sf::Event &e, cbisf::StateStack &) {
                    child.move(10.0f, 0.0f);
                } );
 
     // Left arrow key causes the child to move to the left along the relative
     // x axis, (This will be affected by main entity rotation)
     mainState.addEvent({sf::Event::KeyPressed, {sf::Keyboard::Left}},
-               [&child](const sf::Event &e) {
+               [&child](const sf::Event &e, cbisf::StateStack &) {
                    child.move(-10.0f, 0.0f);
                } );
 
     // Space bar will stop all rotations.
     mainState.addEvent({sf::Event::KeyReleased, {sf::Keyboard::Space}},
-               [&entity,&child](const sf::Event &) {
+               [&entity,&child](const sf::Event &, cbisf::StateStack &) {
                     entity.properties.set<float>("rotation", 0.0f);
                     child.properties.set<float>("rotation", 0.0f);
                 } );
 
     // P key will cause a pause screen to overlay the main
     mainState.addEvent({sf::Event::KeyReleased, {sf::Keyboard::P}},
-               [&engine, &pausedState](const sf::Event &) {
-                       engine.stack().push(pausedState);
+               [&pausedState](const sf::Event &, cbisf::StateStack &stack) {
+                       stack.push(pausedState);
                 } );
 
     // P key while paused will resume normal operations.
     pausedState.addEvent({sf::Event::KeyReleased, {sf::Keyboard::P}},
-                [&engine] (const sf::Event &) {
-                         engine.stack().pop();
+                [] (const sf::Event &, cbisf::StateStack &stack) {
+                    stack.pop();
                 } );
 
     // Closing the app window will cause the engine to stop by clearing the
     // state stack.
     engine.addEvent({sf::Event::Closed},
-               [&engine](const sf::Event &) {
-                   engine.stack().clear();
+               [](const sf::Event &, cbisf::StateStack &stack) {
+                   stack.clear();
                } );
 
     // ESC key will cause the engine to stop by clearing the state stack.
     engine.addEvent({sf::Event::KeyReleased, {sf::Keyboard::Escape}},
-               [&engine](const sf::Event &) {
-                    engine.stack().clear();
+               [&engine](const sf::Event &, cbisf::StateStack &stack) {
+                    stack.clear();
                 } );
 
     // Push the main state.

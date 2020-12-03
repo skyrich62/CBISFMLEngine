@@ -36,6 +36,7 @@
 
 namespace CompuBrite::SFML {
 class ISystem;
+class StateStack;
 
 /// Used to provide state information to the application.  The Engine object
 /// holds a StateStack object, which holds states.  The Engine will call
@@ -68,7 +69,7 @@ public:
     /// Called by StateStack::push() when this state is pushed onto the stack.
     /// By default this function does nothing.  Override in derived classes
     /// for desired functionality.
-    virtual void onPush();
+    virtual void onPush(StateStack &);
 
     /// Called by StateStack::pop(), and StateStack::clear() when this state
     /// is popped off the stack, (or the stack is cleared).
@@ -103,9 +104,10 @@ public:
 
     /// Dispatch an event, if it has been registered with addEvent().
     /// @param event The event to dispatch
+    /// @param stack The active stack for this event.
     /// @return true if processing should stop after this, false if processing
     /// should continue with other states on the stack.
-    bool dispatch(const sf::Event &event);
+    bool dispatch(const sf::Event &event, StateStack &stack);
 
     /// Change lastDrawn
     /// @param b True if this should be the last drawn state in its stack.
@@ -120,12 +122,24 @@ public:
     /// of events.
     void lastDispatched(bool b)             { lastDispatched_ = b; }
 
+    /// Return a pointer to the StateStack this this state has been pushed
+    /// onto.
+    /// @return nullptr if this State is not on a stack.
+    StateStack *stack() const               { return stack_; }
+
+    /// is this State active? (I.E. At the top of the state stack?)
+    bool isActive() const                   { return active_; }
+
 private:
     std::vector<ISystem*> systems_;
     EventManager          events_;
+
+protected:
+    StateStack            *stack_ = nullptr;
     bool                  lastDrawn_ = false;
     bool                  lastUpdated_ = false;
     bool                  lastDispatched_ = false;
+    bool                  active_ = false;
 };
 
 } // namespace CompuBrite::SFML

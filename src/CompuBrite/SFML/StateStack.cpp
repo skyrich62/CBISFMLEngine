@@ -36,7 +36,7 @@ StateStack::push(State &state)
 {
     deactivate();
     states_.push_back(&state);
-    state.onPush();
+    state.onPush(*this);
     activate();
 }
 
@@ -77,7 +77,7 @@ StateStack::dispatch(const sf::Event &event)
 {
     std::vector<State*> temp(states_.rbegin(), states_.rend());
     for (auto state: temp) {
-        auto stop = state->dispatch(event);
+        auto stop = state->dispatch(event, *this);
         if (stop) {
             break;
         }

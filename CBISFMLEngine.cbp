@@ -51,7 +51,7 @@
 				</Linker>
 			</Target>
 			<Target title="test">
-				<Option output="bin/CBISFMLEngine" prefix_auto="1" extension_auto="1" />
+				<Option output="bin/CBISFMLTest" prefix_auto="1" extension_auto="1" />
 				<Option object_output="objs/test" />
 				<Option type="1" />
 				<Option compiler="mingw_gcc-73_64-bit" />
@@ -69,6 +69,22 @@
 					<Add directory="C:/SFML-2.5.1-windows-gcc-7.3.0-mingw-64-bit/SFML-2.5.1/lib" />
 					<Add directory="../CBIUtil/bin/Debug" />
 					<LinkerExe value="CppCompiler" />
+				</Linker>
+			</Target>
+			<Target title="Lander">
+				<Option output="CBISFML-landerexe" prefix_auto="1" extension_auto="1" />
+				<Option object_output=".objs/lander" />
+				<Option type="1" />
+				<Option compiler="mingw_gcc-73_64-bit" />
+				<Option use_console_runner="0" />
+				<Linker>
+					<Add library="sfml-graphics-d" />
+					<Add library="sfml-window-d" />
+					<Add library="sfml-system-d" />
+					<Add library="CBIUtil" />
+					<Add library="stdc++fs" />
+					<Add directory="C:/SFML-2.5.1-windows-gcc-7.3.0-mingw-64-bit/SFML-2.5.1/lib" />
+					<Add directory="../CBIUtil/bin/Debug" />
 				</Linker>
 			</Target>
 		</Build>
@@ -102,6 +118,9 @@
 		<Unit filename="include/CompuBrite/SFML/StateStack.h" />
 		<Unit filename="include/CompuBrite/SFML/TProperty.h" />
 		<Unit filename="include/CompuBrite/SFML/TextEntity.h" />
+		<Unit filename="lander.cpp">
+			<Option target="Lander" />
+		</Unit>
 		<Unit filename="src/CompuBrite/SFML/CircleEntity.cpp" />
 		<Unit filename="src/CompuBrite/SFML/CollisionSystem.cpp" />
 		<Unit filename="src/CompuBrite/SFML/ConvexEntity.cpp" />

@@ -65,11 +65,10 @@ EventManager::find(const sf::Event &event)
 }
 
 void
-EventManager::dispatch(const sf::Event &event)
+EventManager::dispatch(const sf::Event &event, StateStack &stack)
 {
-    auto command = find(event);
-    if (command) {
-        command(event);
+    if (auto command = find(event); command) {
+        command(event, stack);
     }
 }
 

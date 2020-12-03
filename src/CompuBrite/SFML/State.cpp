@@ -77,30 +77,34 @@ State::addEvent(const sf::Event &event, EventManager::Command command)
 }
 
 bool
-State::dispatch(const sf::Event &event)
+State::dispatch(const sf::Event &event, StateStack &stack)
 {
-    events_.dispatch(event);
+    events_.dispatch(event, stack);
     return lastDispatched_;
 }
 
 void
-State::onPush()
+State::onPush(StateStack &stack)
 {
+    stack_ = &stack;
 }
 
 void
 State::onPop()
 {
+    stack_ = nullptr;
 }
 
 void
 State::onActivation()
 {
+    active_ = true;
 }
 
 void
 State::onDeactivation()
 {
+    active_ = false;
 }
 
 } // namespace CompuBrite::SFML
