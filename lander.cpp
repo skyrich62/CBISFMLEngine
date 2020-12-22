@@ -1,3 +1,6 @@
+#include <sstream>
+#include <iomanip>
+
 #include "CompuBrite/SFML/CircleEntity.h"
 #include "CompuBrite/SFML/State.h"
 #include "CompuBrite/SFML/MovementSystem.h"
@@ -8,8 +11,7 @@
 #include "CompuBrite/SFML/ResourceManager.h"
 #include "CompuBrite/SFML/TextEntity.h"
 
-#include <sstream>
-#include <iomanip>
+static constexpr auto GRAVITY = 1.625f;
 
 namespace cbisf = CompuBrite::SFML;
 
@@ -51,7 +53,7 @@ Altitude::update(sf::Time dt)
     for (auto entity: entities_) {
         auto &accel = entity->properties.ref<sf::Vector2f>("acceleration");
         auto &fuel = entity->properties.ref<float>("fuel");
-        accel = {0.0f, 9.86f};
+        accel = {0.0f, GRAVITY};
         std::ostringstream os;
         auto alt = maxAlt_ - entity->getPosition().y - 10.0f;
         entity->properties.set<float>("altitude", alt);
@@ -72,7 +74,6 @@ Altitude::update(sf::Time dt)
            << entity->properties.get<sf::Vector2f>("velocity").y
            << "m/s   Fuel: " << std::setw(6) << std::setprecision(2) << fuel;
         status_.setString(os.str());
-        /// @todo detect landing / crash
     }
 }
 
@@ -151,7 +152,7 @@ public:
     // Size of the world
     static constexpr float   height_ = 800.0f;
     static constexpr float   width_ = 600.0f;
-    static constexpr float   maxFuel_ = 100.0f;
+    static constexpr float   maxFuel_ = 15.0f;
 
 private:
     cbisf::CircleEntity      ship_{10.0f, 3};
