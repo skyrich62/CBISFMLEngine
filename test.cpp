@@ -84,7 +84,6 @@ StatusSystem::update(sf::Time dt)
 {
 
     elapsed_ += dt;
-    //cbi::CheckPoint::hit(CBI_HERE, "dt = ", dt.asMicroseconds());
     if (elapsed_.asSeconds() < 0.1f) {
         return;
     }
@@ -121,8 +120,7 @@ void
 ResetColorSystem::update(sf::Time dt)
 {
     for (auto entity : entities_) {
-        auto ptr = dynamic_cast<cbisf::IShapeEntity*>(entity);
-        if (ptr) {
+        if (auto ptr = dynamic_cast<cbisf::IShapeEntity*>(entity); ptr) {
             ptr->setFillColor(sf::Color::White);
         }
     }
@@ -340,7 +338,7 @@ int main()
 
     // ESC key will cause the engine to stop by clearing the state stack.
     engine.addEvent({sf::Event::KeyReleased, {sf::Keyboard::Escape}},
-               [&engine](const sf::Event &, cbisf::StateStack &stack) {
+               [](const sf::Event &, cbisf::StateStack &stack) {
                     stack.clear();
                 } );
 
