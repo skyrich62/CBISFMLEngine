@@ -29,9 +29,12 @@
 
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <CompuBrite/SFML/EventManager.h>
+#include <CompuBrite/SFML/ResourceManager.h>
 #include <CompuBrite/SFML/StateStack.h>
 
 namespace CompuBrite::SFML {
+
+class Context;
 
 /// Encapsulates the main interface for the framework.  The Engine handles
 /// events, (keyboard, mouse, joystick, etc), holds the state stack, and
@@ -42,32 +45,35 @@ public:
     Engine() = default;
     virtual ~Engine() = default;
 
-    /// Run this Engine using the given target.
-    /// @param target Where to draw all the IEntity objects.
-    /// @param timeSlice the desired frame rate.
-    void run(sf::RenderWindow &target, sf::Time timeSlice);
+    Context& addContext(const std::string &name,
+             StateStack &&stack,
+             sf::Time timeSlice,
+             sf::VideoMode mode,
+             const sf::String &title,
+             sf::Uint32 style = sf::Style::Default,
+             const sf::ContextSettings &settings = sf::ContextSettings());
 
-    /// Add a handler for an event.  If the given event is detected, then
-    /// dispatch to the given callback handler.
-    /// @param event The sf::Event object to detect.
-    /// @param command The handler callback for that event.
-    void addEvent(const sf::Event &event, EventManager::Command command);
+    Context& addContext(const std::string &name,
+             sf::Time timeSlice,
+             sf::VideoMode mode,
+             const sf::String &title,
+             sf::Uint32 style = sf::Style::Default,
+             const sf::ContextSettings &settings = sf::ContextSettings());
 
-    /// @return A reference to the managed StateStack for use by the
-    /// application.
-    StateStack &stack()                      { return stack_; }
+    Context& addContext(const std::string &name, sf::Time timeSlice);
+
+    Context& addContext(const std::string &name, StateStack &&stack, sf::Time timeSlice);
+
+    Context& getContext(const std::string name)  { return _contexts.get(name); }
+
+    void run();
+private:
+    void processEvents(Context &target);
+    void update(Context &target);
+    void render(Context &target);
 
 private:
-    void processEvents(sf::RenderWindow &target);
-    void update(sf::RenderWindow &target);
-    void render(sf::RenderWindow &target);
-
-private:
-    EventManager events_;
-    StateStack   stack_;
-    sf::Clock    clock_;
-    sf::Time     elapsed_;
-    sf::Time     timeSlice_;
+    ResourceManager<std::string, Context> _contexts;
 };
 
 } // namespace CompuBrite::SFML

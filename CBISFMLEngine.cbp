@@ -24,6 +24,9 @@
 				<Option createDefFile="1" />
 				<Option projectLinkerOptionsRelation="-1" />
 				<Option projectLibDirsRelation="-1" />
+				<Compiler>
+					<Add directory="include" />
+				</Compiler>
 				<MakeCommands>
 					<Build command="" />
 					<CompileFile command="" />
@@ -43,6 +46,7 @@
 				<Compiler>
 					<Add option="-O2" />
 					<Add option="-Wall" />
+					<Add directory="include" />
 				</Compiler>
 				<Linker>
 					<Add library="sfml-graphics" />
@@ -59,6 +63,7 @@
 				<Compiler>
 					<Add option="-g" />
 					<Add option="-DCBI_CHECKPOINTS=1" />
+					<Add directory="include" />
 				</Compiler>
 				<Linker>
 					<Add library="sfml-graphics-d" />
@@ -77,6 +82,9 @@
 				<Option type="1" />
 				<Option compiler="mingw_gcc-73_64-bit" />
 				<Option use_console_runner="0" />
+				<Compiler>
+					<Add directory="include" />
+				</Compiler>
 				<Linker>
 					<Add library="sfml-graphics-d" />
 					<Add library="sfml-window-d" />
@@ -101,6 +109,7 @@
 		<Unit filename="cb.bmp" />
 		<Unit filename="include/CompuBrite/SFML/CircleEntity.h" />
 		<Unit filename="include/CompuBrite/SFML/CollisionSystem.h" />
+		<Unit filename="include/CompuBrite/SFML/Context.h" />
 		<Unit filename="include/CompuBrite/SFML/ConvexEntity.h" />
 		<Unit filename="include/CompuBrite/SFML/DrawingSystem.h" />
 		<Unit filename="include/CompuBrite/SFML/Engine.h" />
@@ -123,6 +132,7 @@
 		</Unit>
 		<Unit filename="src/CompuBrite/SFML/CircleEntity.cpp" />
 		<Unit filename="src/CompuBrite/SFML/CollisionSystem.cpp" />
+		<Unit filename="src/CompuBrite/SFML/Context.cpp" />
 		<Unit filename="src/CompuBrite/SFML/ConvexEntity.cpp" />
 		<Unit filename="src/CompuBrite/SFML/DrawingSystem.cpp" />
 		<Unit filename="src/CompuBrite/SFML/Engine.cpp" />

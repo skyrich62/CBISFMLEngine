@@ -7,6 +7,7 @@
 #include "CompuBrite/SFML/DrawingSystem.h"
 #include "CompuBrite/SFML/CollisionSystem.h"
 #include "CompuBrite/SFML/Engine.h"
+#include "CompuBrite/SFML/Context.h"
 #include "CompuBrite/SFML/RectangleEntity.h"
 #include "CompuBrite/SFML/ResourceManager.h"
 #include "CompuBrite/SFML/TextEntity.h"
@@ -185,19 +186,23 @@ Lander::init()
     landingState_.addSystem(ds_);
 
     iState_.addEvent({sf::Event::KeyPressed, {sf::Keyboard::R}},
-    [this](const sf::Event &, cbisf::StateStack &stack) {
-        stack.pop();
-        stack.push(landingState_);
+    [this](const sf::Event &, cbisf::Context &context) {
+        context.stack().pop();
+        context.stack().push(landingState_);
     });
 
-    addEvent({sf::Event::KeyPressed, {sf::Keyboard::Escape}},
-    [](const sf::Event &, cbisf::StateStack &stack) {
-        stack.clear();
+
+    auto &context = addContext("main", sf::seconds(1.0f / 60.0f),
+                               sf::VideoMode(Lander::width_, Lander::height_), "Lander");
+
+    context.addEvent({sf::Event::KeyPressed, {sf::Keyboard::Escape}},
+    [](const sf::Event &, cbisf::Context &context) {
+        context.stack().clear();
     });
 
-    addEvent({sf::Event::Closed},
-    [](const sf::Event &, cbisf::StateStack &stack) {
-        stack.clear();
+    context.addEvent({sf::Event::Closed},
+    [](const sf::Event &, cbisf::Context &context) {
+        context.stack().clear();
     });
 
     // Setup the systems.
@@ -221,19 +226,19 @@ Lander::init()
     cs_.addHandler<cbisf::CircleEntity, cbisf::RectangleEntity>(
     [this] (cbisf::CircleEntity &ship, cbisf::RectangleEntity &ground, const sf::FloatRect&) {
         if (ship.properties.get<float>("altitude") <= 0.0f) {
-            stack().push(landedState_);
+            this->getContext("main").stack().push(landedState_);
         }
     });
 
     // Push the instruction state.
-    stack().push(iState_);
+    context.stack().push(iState_);
 
     // Setup the landed state.
     landedState_.setShip(ship_);
     landedState_.addEvent({sf::Event::KeyPressed, {sf::Keyboard::R}},
-    [this](const sf::Event &, cbisf::StateStack &stack) {
-        stack.clear();
-        stack.push(landingState_);
+    [this](const sf::Event &, cbisf::Context &context) {
+        context.stack().clear();
+        context.stack().push(landingState_);
         ship_.setPosition({width_ / 2.0f, 10.0f});
         ship_.properties.set<float>("fuel", maxFuel_);
         ship_.properties.set<float>("altitude", height_);
@@ -249,7 +254,7 @@ int main()
     Lander lander;
 
     lander.init();
-    sf::RenderWindow app(sf::VideoMode(Lander::width_, Lander::height_), "Lander");
-    lander.run(app, sf::seconds(1.0f / 60.0f));
+
+    lander.run();
     return 0;
 }

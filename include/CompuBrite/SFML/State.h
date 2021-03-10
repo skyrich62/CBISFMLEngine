@@ -33,10 +33,13 @@
 #include <SFML/System/Time.hpp>
 
 #include <CompuBrite/SFML/EventManager.h>
+#include <CompuBrite/SFML/Engine.h>
 
 namespace CompuBrite::SFML {
 class ISystem;
 class StateStack;
+class Context;
+class Engine;
 
 /// Used to provide state information to the application.  The Engine object
 /// holds a StateStack object, which holds states.  The Engine will call
@@ -64,7 +67,7 @@ public:
 
     /// Update this state.  By default, it calls ISystem::update() for all
     /// systems registered to this State.
-    virtual bool update(sf::Time dt);
+    virtual bool update(sf::Time dt, Context&);
 
     /// Called by StateStack::push() when this state is pushed onto the stack.
     /// By default this function does nothing.  Override in derived classes
@@ -107,7 +110,7 @@ public:
     /// @param stack The active stack for this event.
     /// @return true if processing should stop after this, false if processing
     /// should continue with other states on the stack.
-    bool dispatch(const sf::Event &event, StateStack &stack);
+    bool dispatch(const sf::Event &event, Context &context);
 
     /// Change lastDrawn
     /// @param b True if this should be the last drawn state in its stack.

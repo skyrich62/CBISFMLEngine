@@ -73,11 +73,11 @@ StateStack::clear()
 }
 
 void
-StateStack::dispatch(const sf::Event &event)
+StateStack::dispatch(const sf::Event &event, Context &context)
 {
     std::vector<State*> temp(states_.rbegin(), states_.rend());
     for (auto state: temp) {
-        auto stop = state->dispatch(event, *this);
+        auto stop = state->dispatch(event, context);
         if (stop) {
             break;
         }
@@ -97,11 +97,11 @@ StateStack::draw(sf::RenderTarget &target, sf::RenderStates states) const
 }
 
 void
-StateStack::update(sf::Time dt)
+StateStack::update(sf::Time dt, Context &context)
 {
     std::vector<State*> temp(states_.rbegin(), states_.rend());
     for (auto state: temp) {
-        auto stop = state->update(dt);
+        auto stop = state->update(dt, context);
         if (stop) {
             break;
         }

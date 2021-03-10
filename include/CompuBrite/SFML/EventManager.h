@@ -35,6 +35,7 @@
 namespace CompuBrite::SFML {
 
 class StateStack;
+class Context;
 
 /// Used to compare two events, (useful for std::map).
 struct EventLess
@@ -47,7 +48,7 @@ struct EventLess
 class EventManager
 {
 public:
-    using Command = std::function<void(const sf::Event&, StateStack &)>;
+    using Command = std::function<void(const sf::Event&, Context &)>;
 
     EventManager() = default;
     EventManager(const EventManager&) = delete;
@@ -65,7 +66,7 @@ public:
     /// Dispatch the callback for the given event, if it exists.
     /// @param event The event which was detected.
     /// @param stack The StateStack or nullptr
-    void dispatch(const sf::Event &event, StateStack &stack);
+    void dispatch(const sf::Event &event, Context &context);
 private:
     /// Find a callback for the given event.
     /// @param event The event which was detected.

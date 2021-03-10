@@ -35,6 +35,7 @@
 #include <CompuBrite/SFML/DrawingSystem.h>
 #include <CompuBrite/SFML/CollisionSystem.h>
 #include <CompuBrite/SFML/Engine.h>
+#include <CompuBrite/SFML/Context.h>
 #include <CompuBrite/SFML/State.h>
 #include <CompuBrite/CheckPoint.h>
 
@@ -132,7 +133,7 @@ public:
     PausedState();
     ~PausedState() = default;
 
-    bool update(sf::Time dt) override;
+    bool update(sf::Time dt, cbisf::Context &) override;
     bool draw(sf::RenderTarget &target, sf::RenderStates states) const override;
 
 private:
@@ -146,7 +147,7 @@ PausedState::PausedState() :
 }
 
 bool
-PausedState::update(sf::Time dt)
+PausedState::update(sf::Time dt, cbisf::Context &)
 {
     elapsed_ += dt;
     if (elapsed_.asSeconds() > 0.5f) {
@@ -274,82 +275,80 @@ int main()
 
     // Up key causes the child to rotate clockwise.
     mainState.addEvent({sf::Event::KeyReleased, {sf::Keyboard::Up}},
-               [&child](const sf::Event &e, cbisf::StateStack &) {
+               [&child](const sf::Event &e, cbisf::Context &) {
                    child.properties.ref<float>("rotation") += 10.0f;
                } );
 
     // Down key causes the child to rotate counter-clockwise
     mainState.addEvent({sf::Event::KeyReleased, {sf::Keyboard::Down}},
-               [&child](const sf::Event &e, cbisf::StateStack &) {
+               [&child](const sf::Event &e, cbisf::Context &) {
                    child.properties.ref<float>("rotation") -= 10.0f;
                } );
 
     // PageUp causes the main entity to rotate counter-clockwise
     mainState.addEvent({sf::Event::KeyReleased, {sf::Keyboard::PageUp}},
-               [&entity](const sf::Event &e, cbisf::StateStack &) {
+               [&entity](const sf::Event &e, cbisf::Context &) {
                    entity.properties.ref<float>("rotation") -= 10.0f;
                } );
 
     // PageDown causes the main entity to rotate clockwise.
     mainState.addEvent({sf::Event::KeyReleased, {sf::Keyboard::PageDown}},
-               [&entity](const sf::Event &e, cbisf::StateStack &) {
+               [&entity](const sf::Event &e, cbisf::Context &) {
                    entity.properties.ref<float>("rotation") += 10.0f;
                } );
 
     // Right arrow key causes the child to move to the right along the relative
     // x axis.  (This will be affected by main entity rotation)
     mainState.addEvent({sf::Event::KeyPressed, {sf::Keyboard::Right}},
-               [&child](const sf::Event &e, cbisf::StateStack &) {
+               [&child](const sf::Event &e, cbisf::Context &) {
                    child.move(10.0f, 0.0f);
                } );
 
     // Left arrow key causes the child to move to the left along the relative
     // x axis, (This will be affected by main entity rotation)
     mainState.addEvent({sf::Event::KeyPressed, {sf::Keyboard::Left}},
-               [&child](const sf::Event &e, cbisf::StateStack &) {
+               [&child](const sf::Event &e, cbisf::Context &) {
                    child.move(-10.0f, 0.0f);
                } );
 
     // Space bar will stop all rotations.
     mainState.addEvent({sf::Event::KeyReleased, {sf::Keyboard::Space}},
-               [&entity,&child](const sf::Event &, cbisf::StateStack &) {
+               [&entity,&child](const sf::Event &, cbisf::Context &) {
                     entity.properties.set<float>("rotation", 0.0f);
                     child.properties.set<float>("rotation", 0.0f);
                 } );
 
     // P key will cause a pause screen to overlay the main
     mainState.addEvent({sf::Event::KeyReleased, {sf::Keyboard::P}},
-               [&pausedState](const sf::Event &, cbisf::StateStack &stack) {
-                       stack.push(pausedState);
+               [&pausedState](const sf::Event &, cbisf::Context &context) {
+                       context.stack().push(pausedState);
                 } );
 
     // P key while paused will resume normal operations.
     pausedState.addEvent({sf::Event::KeyReleased, {sf::Keyboard::P}},
-                [] (const sf::Event &, cbisf::StateStack &stack) {
-                    stack.pop();
+                [] (const sf::Event &, cbisf::Context &context) {
+                    context.stack().pop();
                 } );
 
+
+    auto &context = engine.addContext("main", sf::seconds(1.0f / 60.0f), sf::VideoMode(800, 600), "Demo Window");
     // Closing the app window will cause the engine to stop by clearing the
     // state stack.
-    engine.addEvent({sf::Event::Closed},
-               [](const sf::Event &, cbisf::StateStack &stack) {
-                   stack.clear();
+    context.addEvent({sf::Event::Closed},
+               [](const sf::Event &, cbisf::Context &context) {
+                   context.stack().clear();
                } );
 
     // ESC key will cause the engine to stop by clearing the state stack.
-    engine.addEvent({sf::Event::KeyReleased, {sf::Keyboard::Escape}},
-               [](const sf::Event &, cbisf::StateStack &stack) {
-                    stack.clear();
+    context.addEvent({sf::Event::KeyReleased, {sf::Keyboard::Escape}},
+               [](const sf::Event &, cbisf::Context &context) {
+                    context.stack().clear();
                 } );
 
     // Push the main state.
-    engine.stack().push(mainState);
-
-    // Create an application window and throttle the frame rate.
-    sf::RenderWindow app(sf::VideoMode(800, 600), "Demo Window");
-
+    context.stack().push(mainState);
     // Run the engine on the application window.
-    engine.run(app, sf::seconds(1.0f / 60.0f));
+    engine.run();
 
     return EXIT_SUCCESS;
 }

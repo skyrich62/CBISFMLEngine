@@ -31,10 +31,14 @@
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/System/Time.hpp>
 
+#include <CompuBrite/SFML/Engine.h>
+
 namespace CompuBrite::SFML {
 
 class State;
 class ISystem;
+class Context;
+class Engine;
 
 /// Manage a stack of State objects.  The Engine object will use this stack
 /// to manage all updating and drawing of all objects in the application. If
@@ -75,11 +79,11 @@ public:
     /// updating that State.  For example, this is useful for "Pause" States.
     /// Where a Semi-transparent pause screen overlays the underlying states.
     /// We want the pause state to update, but not the rest of the states.
-    void update(sf::Time dt);
+    void update(sf::Time dt, Context &context);
 
     /// Dispatch an event through the stack.
     /// @param event The event to dispatch
-    void dispatch(const sf::Event &event);
+    void dispatch(const sf::Event &event, Context &);
 
 private:
     void deactivate();

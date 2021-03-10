@@ -21,55 +21,65 @@
  * SOFTWARE.
  *
  * @file
- * @brief Implementation for EventManager
+ * @brief Implementation for Context.
 */
 
-#include "CompuBrite/SFML/EventManager.h"
-#include "CompuBrite/CheckPoint.h"
+#include <SFML/System/Sleep.hpp>
+#include "CompuBrite/SFML/Context.h"
 
-namespace CompuBrite::SFML {
+namespace CompuBrite:: SFML {
 
-bool
-EventLess::operator()(const sf::Event &lhs, const sf::Event &rhs)
+void
+Context::update()
 {
-    if (lhs.type == rhs.type) {
-        switch (lhs.type) {
-        case sf::Event::KeyReleased:
-        case sf::Event::KeyPressed:
-            return lhs.key.code < rhs.key.code;
-        case sf::Event::MouseButtonPressed:
-        case sf::Event::MouseButtonReleased:
-            return lhs.mouseButton.button == rhs.mouseButton.button;
-        default:
-            CompuBrite::CheckPoint::hit(CBI_HERE, "Unexpected event");
-            break;
+    processEvents();
+    _elapsed += _clock.restart();
+    while (_elapsed > _timeSlice) {
+        _elapsed -= _timeSlice;
+        _stack.update(_timeSlice, *this);
+    }
+}
+
+void
+Context::render()
+{
+    _window.clear();
+    _window.draw(_stack);
+    _window.display();
+}
+
+void
+Context::processEvents()
+{
+    sf::Event event;
+    while (_window.pollEvent(event)) {
+        stack().dispatch(event, *this);
+        _events.dispatch(event, *this);
+    }
+}
+
+void
+Context::run()
+{
+    _elapsed = sf::Time::Zero;
+    while (_window.isOpen()) {
+        if (stack().empty()) {
+            _window.close();
+            return;
         }
-        return false;
+        update();
+        render();
+        sf::sleep((_timeSlice - _elapsed) / 4.0f);
     }
-    return lhs.type < rhs.type;
 }
 
 void
-EventManager::add(const sf::Event &event, Command command)
+Context::addEvent(const sf::Event &event, EventManager::Command command)
 {
-    events_[event] = command;
+    _events.add(event, command);
 }
 
-EventManager::Command
-EventManager::find(const sf::Event &event)
-{
-    if (auto found = events_.find(event); found != events_.end()) {
-        return found->second;
-    }
-    return Command();
-}
 
-void
-EventManager::dispatch(const sf::Event &event, Context &context)
-{
-    if (auto command = find(event); command) {
-        command(event, context);
-    }
-}
+} // namespace CompuBrite
 
-} // namespace CompuBrite::SFML
+// EOF

@@ -25,70 +25,69 @@
 */
 
 #include "CompuBrite/SFML/Engine.h"
+#include "CompuBrite/SFML/Context.h"
 
 #include "SFML/System/Time.hpp"
 #include "SFML/System/Clock.hpp"
 #include "SFML/System/Sleep.hpp"
 
+
 namespace CompuBrite::SFML {
 
-void
-Engine::processEvents(sf::RenderWindow &target)
+
+Context&
+Engine::addContext(const std::string &name,
+            StateStack &&stack,
+            sf::Time timeSlice,
+            sf::VideoMode mode,
+            const sf::String &title,
+            sf::Uint32 style,
+            const sf::ContextSettings &settings)
 {
-    sf::Event event;
-    while (target.pollEvent(event)) {
-        stack_.dispatch(event);
-        events_.dispatch(event, stack_);
-    }
+    _contexts.enroll<Context>(name, name, *this, std::move(stack), timeSlice, mode, title, style, settings);
+    return _contexts.get(name);
+}
+
+Context&
+Engine::addContext(const std::string &name,
+            sf::Time timeSlice,
+            sf::VideoMode mode,
+            const sf::String &title,
+            sf::Uint32 style,
+            const sf::ContextSettings &settings)
+{
+    _contexts.enroll<Context>(name, name, *this, StateStack(), timeSlice, mode, title, style, settings);
+    return _contexts.get(name);
+}
+
+Context&
+Engine::addContext(const std::string &name,
+            StateStack &&stack,
+            sf::Time timeSlice)
+{
+    _contexts.enroll<Context>(name, name, *this, std::move(stack), timeSlice);
+    return _contexts.get(name);
+}
+
+Context&
+Engine::addContext(const std::string &name,
+            sf::Time timeSlice)
+{
+    _contexts.enroll<Context>(name, name, *this, StateStack(), timeSlice);
+    return _contexts.get(name);
 }
 
 void
-Engine::update(sf::RenderWindow &target)
+Engine::run()
 {
-    processEvents(target);
-    elapsed_ += clock_.restart();
-    while (elapsed_ > timeSlice_) {
-        elapsed_ -= timeSlice_;
-        processEvents(target);
-        stack_.update(timeSlice_);
-    }
-}
-
-void
-Engine::run(sf::RenderWindow &target, sf::Time timeSlice)
-{
-    elapsed_ = sf::Time::Zero;
-    timeSlice_ = timeSlice;
-
-	// Start the game loop
-    while (target.isOpen())
+    auto visitor = [this](Context &target) -> void
     {
-        if (stack().empty()) {
-            return;
+        if (target.window().isOpen()) {
+            target.run();
         }
-        update(target);
-        render(target);
-        sf::sleep((timeSlice_ - elapsed_) / 4.0f);
-    }
-}
+    };
 
-void
-Engine::render(sf::RenderWindow &target)
-{
-    // Clear screen
-    target.clear();
-
-    // Draw the stack
-    target.draw(stack_);
-
-    // Display the window
-    target.display();
-}
-
-void
-Engine::addEvent(const sf::Event &event, EventManager::Command command)
-{
-    events_.add(event, command);
+    _contexts.accept(visitor);
 }
 
 } // namespace CompuBrite::SFML

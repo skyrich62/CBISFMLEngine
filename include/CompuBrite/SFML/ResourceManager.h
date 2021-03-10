@@ -110,9 +110,19 @@ public:
         if (find(id)) {
             return false;
         }
-        auto res = std::make_unique<Derived>(args...);
+        auto res = std::make_unique<Derived>(std::forward<Args>(args)...);
         resources_[id] = std::move(res);
         return true;
+    }
+
+    void accept(std::function<void(Resource&)> visit)
+    {
+        if (!visit) {
+            return;
+        }
+        for (auto &res : resources_) {
+            visit(*res.second);
+        }
     }
 private:
     /// Fine the given resource if it exists.

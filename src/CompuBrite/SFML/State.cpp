@@ -46,7 +46,7 @@ State::draw(sf::RenderTarget &target, sf::RenderStates states) const
 }
 
 bool
-State::update(sf::Time dt)
+State::update(sf::Time dt, Context &context)
 {
     for (auto system: systems_) {
         system->update(dt);
@@ -77,9 +77,9 @@ State::addEvent(const sf::Event &event, EventManager::Command command)
 }
 
 bool
-State::dispatch(const sf::Event &event, StateStack &stack)
+State::dispatch(const sf::Event &event, Context &context)
 {
-    events_.dispatch(event, stack);
+    events_.dispatch(event, context);
     return lastDispatched_;
 }
 
