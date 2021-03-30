@@ -347,7 +347,8 @@ int main()
 
     // Push the main state.
     context.stack().push(mainState);
-    // Run the engine on the application window.
+
+    // Run the engine.
     engine.run();
 
     return EXIT_SUCCESS;
