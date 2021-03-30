@@ -96,6 +96,9 @@ public:
         return true;
     }
 
+    /// Add a resource to this manager without any need of loading it.
+    /// @param id The identifier to associate this resource
+    /// @param res The resource to add.
     bool enroll(const ID &id, std::unique_ptr<Resource>&& res)
     {
         if (find(id)) {
@@ -104,6 +107,7 @@ public:
         resources_[id] = std::move(res);
     }
 
+    /// Construct a resource and add it to this manager.
     template<typename Derived, typename ...Args>
     bool enroll(const ID &id, Args &&...args)
     {
@@ -115,6 +119,7 @@ public:
         return true;
     }
 
+    /// Visit all of the resources in this manager.
     void accept(std::function<void(Resource&)> visit)
     {
         if (!visit) {
@@ -124,8 +129,15 @@ public:
             visit(*res.second);
         }
     }
+
+    /// Allow iteration over the resources.
+    auto begin()                                 { return resources_.begin(); }
+
+    /// Allow iteration over the resources.
+    auto end()                                   { return resources_.end(); }
+
 private:
-    /// Fine the given resource if it exists.
+    /// Find the given resource if it exists.
     /// @param id The identifier to look for.
     /// @return The resource associated to id if it exists, else nullptr.
     Resource* find(const ID &id)
