@@ -1,5 +1,6 @@
 *.depend
 *.layout
+.objs
 obj
 bin
 objs
