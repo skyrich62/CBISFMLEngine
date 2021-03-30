@@ -32,45 +32,72 @@ namespace CompuBrite:: SFML {
 void
 Context::update()
 {
-    processEvents();
-    _elapsed += _clock.restart();
-    while (_elapsed > _timeSlice) {
-        _elapsed -= _timeSlice;
-        _stack.update(_timeSlice, *this);
+    if (true) {
+        Lock lock(_mutex);
+        _started.wait(lock);
+    }
+    while (_running && _window.isOpen()) {
+        sf::sleep(_timeSlice / 4.0f);
+        _elapsed += _clock.restart();
+        while (_elapsed > _timeSlice) {
+            _elapsed -= _timeSlice;
+            _stack.update(_timeSlice, *this);
+        }
     }
 }
 
 void
 Context::render()
 {
-    _window.clear();
-    _window.draw(_stack);
-    _window.display();
-}
-
-void
-Context::processEvents()
-{
-    sf::Event event;
-    while (_window.pollEvent(event)) {
-        stack().dispatch(event, *this);
-        _events.dispatch(event, *this);
+    if (true) {
+        Lock lock(_mutex);
+        _started.wait(lock);
+    }
+    while (_running && _window.isOpen()) {
+        _window.clear();
+        _window.draw(_stack);
+        _window.display();
+        _window.setActive(false);
+        sf::sleep(_timeSlice);
     }
 }
 
 void
 Context::run()
 {
-    _elapsed = sf::Time::Zero;
-    while (_window.isOpen()) {
-        if (stack().empty()) {
-            _window.close();
-            return;
+    Lock lock(_mutex);
+    auto &[name, mode, title, style, settings] = _windowArgs;
+    _window.create(mode, title, style, settings);
+    _window.setActive(false);
+    _started.notify_all();
+    lock.unlock();
+    sf::Event event;
+    while (_running) {
+        if (_window.waitEvent(event)) {
+            _stack.dispatch(event, *this);
+            _events.dispatch(event, *this);
+            if (event.type == sf::Event::Closed || _stack.empty()) {
+                _window.close();
+                _running = false;
+                _window.setActive(false);
+                return;
+            }
         }
-        update();
-        render();
-        sf::sleep((_timeSlice - _elapsed) / 4.0f);
     }
+}
+
+void
+Context::start()
+{
+    if (true) {
+        Lock lock(_mutex);
+
+        _running = true;
+        _engine.addTask([this] { this->run(); });
+        _engine.addTask([this] { this->update(); });
+        _engine.addTask([this] { this->render(); });
+    }
+    _engine.activate(3);
 }
 
 void

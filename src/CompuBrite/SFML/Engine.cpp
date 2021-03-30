@@ -34,7 +34,6 @@
 
 namespace CompuBrite::SFML {
 
-
 Context&
 Engine::addContext(const std::string &name,
             StateStack &&stack,
@@ -43,51 +42,44 @@ Engine::addContext(const std::string &name,
             const sf::String &title,
             sf::Uint32 style,
             const sf::ContextSettings &settings)
-{
-    _contexts.enroll<Context>(name, name, *this, std::move(stack), timeSlice, mode, title, style, settings);
-    return _contexts.get(name);
-}
-
-Context&
-Engine::addContext(const std::string &name,
-            sf::Time timeSlice,
-            sf::VideoMode mode,
-            const sf::String &title,
-            sf::Uint32 style,
-            const sf::ContextSettings &settings)
-{
-    _contexts.enroll<Context>(name, name, *this, StateStack(), timeSlice, mode, title, style, settings);
-    return _contexts.get(name);
-}
-
-Context&
-Engine::addContext(const std::string &name,
-            StateStack &&stack,
-            sf::Time timeSlice)
 {
     _contexts.enroll<Context>(name, name, *this, std::move(stack), timeSlice);
-    return _contexts.get(name);
+    auto &context = _contexts.get(name);
+    context.setArgs(name, mode, title, style, settings);
+    return context;
 }
 
 Context&
 Engine::addContext(const std::string &name,
-            sf::Time timeSlice)
+            sf::Time timeSlice,
+            sf::VideoMode mode,
+            const sf::String &title,
+            sf::Uint32 style,
+            const sf::ContextSettings &settings)
 {
     _contexts.enroll<Context>(name, name, *this, StateStack(), timeSlice);
-    return _contexts.get(name);
+    auto &context = _contexts.get(name);
+    context.setArgs(name, mode, title, style, settings);
+    return context;
 }
 
 void
 Engine::run()
 {
-    auto visitor = [this](Context &target) -> void
-    {
-        if (target.window().isOpen()) {
-            target.run();
-        }
-    };
+    for (auto &context : _contexts) {
+        context.second->start();
+    }
+    sf::sleep(sf::seconds(1.0f));
 
-    _contexts.accept(visitor);
+    while (true) {
+        auto running = false;
+        for (auto &context : _contexts) {
+            running |= context.second->isRunning();
+        }
+        if (!running) {
+            break;
+        }
+    }
 }
 
 } // namespace CompuBrite::SFML
