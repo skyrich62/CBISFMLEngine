@@ -32,17 +32,20 @@
 #include <CompuBrite/SFML/IEntity.h>
 
 #include <vector>
+#include <mutex>
 
 namespace CompuBrite::SFML {
+
+class Context;
 
 /// ISystem is the common interface for managing various IEntity objects.
 /// An IEntity can be registered with multiple ISystem objects, and each
 /// ISystem can manage multiple IEntity objects.
-class ISystem : public sf::Drawable
+class ISystem
 {
 public:
-    ISystem();
-    virtual ~ISystem();
+    ISystem() = default;
+    virtual ~ISystem() = default;
 
     /// Add an IEntity object to this ISystem.
     /// @param entity The IEntity to add.
@@ -57,18 +60,26 @@ public:
     /// Draw this ISystem.  By default does nothing, subclasses must override
     /// to provide required processing.
     /// @see DrawingSystem
-    void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
+    virtual void draw(Context &target, sf::RenderStates states) const;
 
     /// Update this ISystem.  By default does nothing, subclasses must override
     /// to provide required processing.
     /// @see MovementSystem
     /// @see CollisionSystem
-    virtual void update(sf::Time dt);
+    virtual void update(Context &target, sf::Time dt);
 
 protected:
+    using Mutex = std::mutex;
+    using Lock = std::unique_lock<Mutex>;
+
+    mutable Mutex mutex_;
+
+    Lock lock() const                            { return Lock(mutex_); }
     std::vector<IEntity*> entities_;
 
+
 private:
+
     /// Add any required properties to the given IEntity object. This is called
     /// from addEntity.  By default does nothing, subclasses must override to
     /// provide required processing.

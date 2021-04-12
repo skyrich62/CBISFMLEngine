@@ -42,7 +42,7 @@ public:
     /// acceleration, rotation, and other properties.  Perform the required
     /// transforms for each IEntity object.
     /// @param dt The elapsed time since the last call to update().
-    void update(sf::Time dt) override;
+    void update(Context &target, sf::Time dt) override;
 
 private:
 

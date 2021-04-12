@@ -85,7 +85,7 @@ StateStack::dispatch(const sf::Event &event, Context &context)
 }
 
 void
-StateStack::draw(sf::RenderTarget &target, sf::RenderStates states) const
+StateStack::draw(Context &target, sf::RenderStates states) const
 {
     std::vector<State*> temp(states_.begin(), states_.end());
     for (auto state: temp) {

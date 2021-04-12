@@ -71,7 +71,7 @@ CollisionSystem::CollisionSystem(Level level) :
 }
 
 void
-CollisionSystem::update(sf::Time dt)
+CollisionSystem::update(Context &target, sf::Time dt)
 {
     checkCollisions();
 }

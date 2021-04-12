@@ -59,7 +59,7 @@ public:
     ~StatusSystem() = default;
 
     void addProperties(cbisf::IEntity &) override;
-    void update(sf::Time dt) override;
+    void update(cbisf::Context &context, sf::Time dt) override;
     bool collision_ = false;
 
     cbisf::TextEntity& status()             { return status_; }
@@ -81,7 +81,7 @@ StatusSystem::addProperties(cbisf::IEntity &entity)
 }
 
 void
-StatusSystem::update(sf::Time dt)
+StatusSystem::update(cbisf::Context &, sf::Time dt)
 {
 
     elapsed_ += dt;
@@ -114,14 +114,15 @@ public:
     ResetColorSystem() = default;
     ~ResetColorSystem() = default;
 
-    void update(sf::Time dt);
+    void update(cbisf::Context &context, sf::Time dt) override;
 };
 
 void
-ResetColorSystem::update(sf::Time dt)
+ResetColorSystem::update(cbisf::Context &, sf::Time)
 {
     for (auto entity : entities_) {
         if (auto ptr = dynamic_cast<cbisf::IShapeEntity*>(entity); ptr) {
+            auto lock = ptr->lock();
             ptr->setFillColor(sf::Color::White);
         }
     }
@@ -134,7 +135,7 @@ public:
     ~PausedState() = default;
 
     bool update(sf::Time dt, cbisf::Context &) override;
-    bool draw(sf::RenderTarget &target, sf::RenderStates states) const override;
+    bool draw(cbisf::Context &target, sf::RenderStates states) const override;
 
 private:
     sf::Time elapsed_ = sf::Time::Zero;
@@ -158,16 +159,17 @@ PausedState::update(sf::Time dt, cbisf::Context &)
 }
 
 bool
-PausedState::draw(sf::RenderTarget &target, sf::RenderStates states) const
+PausedState::draw(cbisf::Context &target, sf::RenderStates states) const
 {
     static cbisf::RectangleEntity background;
     static cbisf::TextEntity paused("Paused - Press 'P' to continue",
                                     fontManager.get(Fonts::Vera), 25);
     static auto once = true;
 
+    auto &win = target.window();
     if (once) {
         background.setFillColor({0, 0, 0, 127});
-        sf::Vector2f size(target.getSize());
+        sf::Vector2f size(win.getSize());
         background.setSize(size);
         background.setOrigin(size / 2.0f);
         background.setPosition(size / 2.0f);
@@ -179,9 +181,9 @@ PausedState::draw(sf::RenderTarget &target, sf::RenderStates states) const
         once = false;
     }
 
-    target.draw(background);
+    win.draw(background);
     if (blink_) {
-        target.draw(paused);
+        win.draw(paused);
     }
     return false;
 }

@@ -63,11 +63,11 @@ public:
 
     /// Draw this state.  By default, it calls ISystem::draw() for all systems
     /// registered to this State.
-    virtual bool draw(sf::RenderTarget &target, sf::RenderStates states) const;
+    virtual bool draw(Context &target, sf::RenderStates states) const;
 
     /// Update this state.  By default, it calls ISystem::update() for all
     /// systems registered to this State.
-    virtual bool update(sf::Time dt, Context&);
+    virtual bool update(sf::Time dt, Context &);
 
     /// Called by StateStack::push() when this state is pushed onto the stack.
     /// By default this function does nothing.  Override in derived classes

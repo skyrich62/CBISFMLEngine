@@ -44,7 +44,7 @@ class Engine;
 /// to manage all updating and drawing of all objects in the application. If
 /// the stack is empty, then Engine::run() will return. This is a convenient
 /// way to end the application.
-class StateStack : public sf::Drawable
+class StateStack
 {
 public:
     StateStack() = default;
@@ -72,7 +72,7 @@ public:
     /// If any State::draw() function returns true, drawing will stop after
     /// drawing that State.
     /// @see State
-    void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
+    void draw(Context &target, sf::RenderStates states = sf::RenderStates()) const;
 
     /// call State::update() for each element of the stack, starting at the top.
     /// If any State::update() function return true, updating will stop after

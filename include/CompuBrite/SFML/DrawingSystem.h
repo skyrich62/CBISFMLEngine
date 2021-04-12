@@ -48,7 +48,7 @@ protected:
     /// and states.
     /// @param target Draw them to this target
     /// @param states Use these base states.
-    void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
+    void draw(Context &target, sf::RenderStates states) const override;
 
 private:
     bool boundingBoxes_;

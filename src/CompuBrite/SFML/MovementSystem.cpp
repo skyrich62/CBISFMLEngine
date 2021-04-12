@@ -31,9 +31,10 @@
 namespace CompuBrite::SFML {
 
 void
-MovementSystem::update(sf::Time dt)
+MovementSystem::update(Context &target, sf::Time dt)
 {
     for (auto entity: entities_) {
+        auto lock = entity->lock();
         auto &vel = entity->properties.ref<sf::Vector2f>("velocity");
         auto &rot = entity->properties.ref<float>("rotation");
 
@@ -53,6 +54,7 @@ MovementSystem::update(sf::Time dt)
 void
 MovementSystem::addProperties(IEntity &entity)
 {
+    auto lock = entity.lock();
     entity.properties.add<sf::Vector2f>("velocity");
     entity.properties.add<float>("rotation");
     entity.properties.add<sf::Vector2f>("acceleration");

@@ -31,11 +31,6 @@
 
 namespace CompuBrite::SFML {
 
-IEntity::~IEntity()
-{
-    //dtor
-}
-
 sf::FloatRect
 IEntity::getLocalBounds() const
 {
@@ -46,7 +41,10 @@ void
 IEntity::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {
     states.transform *= this->getTransform();
-    drawThis(target, states);
+    if (true) {
+        auto l = lock();
+        drawThis(target, states);
+    }
     drawChildren(target, states);
 }
 
@@ -54,9 +52,12 @@ void
 IEntity::drawChildren(sf::RenderTarget &target, sf::RenderStates states) const
 {
     std::multimap<int, IEntity*> drawings;
-    for (auto child : children_) {
-        if (child) {
-            drawings.insert(std::pair<int, IEntity*>(child->zOrder(), child));
+    if (true) {
+        auto l = lock();
+        for (auto child : children_) {
+            if (child) {
+                drawings.insert(std::pair<int, IEntity*>(child->zOrder(), child));
+            }
         }
     }
     for (auto child : drawings) {
@@ -67,11 +68,13 @@ IEntity::drawChildren(sf::RenderTarget &target, sf::RenderStates states) const
 bool
 IEntity::addChild(IEntity &child)
 {
+    auto l = lock();
     auto found = std::find(children_.begin(), children_.end(), &child);
     if (found != children_.end()) {
         return false;
     }
     children_.push_back(&child);
+    auto l2 = child.lock();
     child.parent_ = this;
     return true;
 }
@@ -81,7 +84,7 @@ IEntity::addChild(IEntity &child, int zOrder)
 {
     auto ret = addChild(child);
     if (ret) {
-        child.zOrder_ = zOrder;
+        child.zOrder(zOrder);
     }
     return ret;
 }
@@ -94,7 +97,10 @@ IEntity::drawThis(sf::RenderTarget &, sf::RenderStates) const
 void
 IEntity::update(sf::Time dt)
 {
-    updateThis(dt);
+    if (true) {
+        auto l = lock();
+        updateThis(dt);
+    }
     updateChildren(dt);
 }
 
@@ -114,9 +120,11 @@ IEntity::updateThis(sf::Time dt)
 void
 IEntity::addSystem(ISystem &system, bool callback)
 {
+    auto l = lock();
     auto found = find(systems_.begin(), systems_.end(), &system);
     if (found == systems_.end()) {
         systems_.push_back(&system);
+        l.unlock();
         if (callback) {
             system.addEntity(*this, false);
         }
@@ -126,9 +134,11 @@ IEntity::addSystem(ISystem &system, bool callback)
 void
 IEntity::dropSystem(ISystem &system, bool callback)
 {
+    auto l = lock();
     auto found = find(systems_.begin(), systems_.end(), &system);
     if (found != systems_.end()) {
         systems_.erase(found);
+        l.unlock();
         if (callback) {
             system.dropEntity(*this, false);
         }
@@ -139,8 +149,10 @@ sf::Transform
 IEntity::getGlobalTransform() const
 {
     auto transform = sf::Transform::Identity;
-    for (auto entity = this; entity; entity = entity->parent_) {
+    for (auto entity = this; entity;) {
+        auto l = entity->lock();
         transform = entity->getTransform() * transform;
+        entity = entity->parent_;
     }
     return transform;
 }
@@ -148,13 +160,17 @@ IEntity::getGlobalTransform() const
 sf::Vector2f
 IEntity::getGlobalPosition() const
 {
-    return getGlobalTransform() * this->getOrigin();
+    auto transform = getGlobalTransform();
+    auto l = lock();
+    return transform * this->getOrigin();
 }
 
 sf::FloatRect
 IEntity::getGlobalBounds() const
 {
-    return getGlobalTransform().transformRect(getLocalBounds());
+    auto transform = getGlobalTransform();
+    auto l = lock();
+    return transform.transformRect(getLocalBounds());
 }
 
 

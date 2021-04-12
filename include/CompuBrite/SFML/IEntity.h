@@ -35,6 +35,7 @@
 
 #include <vector>
 #include <functional>
+#include <mutex>
 
 namespace CompuBrite::SFML {
 
@@ -53,7 +54,7 @@ public:
     /// @param zOrder zOrder layering lower numbers will be drawn first, other
     /// than that, the zOrder is arbitrary.
     explicit IEntity(int zOrder) : zOrder_(zOrder) { }
-    virtual ~IEntity();
+    virtual ~IEntity() = default;
 
     /// @return retrieve the local bounding box for this IEntity.  By default,
     /// IEntity will return an empty rectangle.  Derived classes *must*
@@ -111,10 +112,15 @@ public:
     sf::Transform getGlobalTransform() const;
 
     /// @return The zOrder, (drawing order), for this IEntity.
-    int zOrder() const                            { return zOrder_; }
+    int zOrder() const                            { auto l = lock(); return zOrder_; }
 
     /// @return Set a new zOrder for this IEntity.
-    void zOrder(int order)                        { zOrder_ = order; }
+    void zOrder(int order)                        { auto l = lock(); zOrder_ = order; }
+
+    using Mutex = std::mutex;
+    using Lock = std::unique_lock<Mutex>;
+
+    Lock lock() const                            { return Lock(mutex_); }
 
 private:
     /// Draw all child IEntity objects associated with this IEntity.
@@ -151,6 +157,7 @@ private:
     using Children = std::vector<IEntity*>;
     using Systems = std::vector<ISystem*>;
 
+    mutable Mutex mutex_;
     Children children_;
     Systems systems_;
     IEntity *parent_{nullptr};

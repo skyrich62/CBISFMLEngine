@@ -74,7 +74,7 @@ public:
     /// called by the framework.  This method will detect the collisions
     /// and dispatch the handlers.
     /// @param dt The SFML time since the last call to update.
-    void update(sf::Time dt) override;
+    void update(Context &target, sf::Time dt) override;
 
     /// Add a collision handler to this system.  If a collision is detected
     /// between objects of the given types, (must be derived from IEntity),

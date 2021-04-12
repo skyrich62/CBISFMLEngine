@@ -55,7 +55,7 @@ Context::render()
     }
     while (_running && _window.isOpen()) {
         _window.clear();
-        _window.draw(_stack);
+        _stack.draw(*this);
         _window.display();
         _window.setActive(false);
         sf::sleep(_timeSlice);

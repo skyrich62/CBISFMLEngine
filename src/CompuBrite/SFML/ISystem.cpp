@@ -31,33 +31,25 @@
 
 namespace CompuBrite::SFML {
 
-ISystem::ISystem()
-{
-    //ctor
-}
-
-ISystem::~ISystem()
-{
-    //dtor
-}
-
 void
-ISystem::draw(sf::RenderTarget &target, sf::RenderStates states) const
+ISystem::draw(Context &target, sf::RenderStates states) const
 {
 }
 
 void
-ISystem::update(sf::Time dt)
+ISystem::update(Context &, sf::Time)
 {
 }
 
 void
 ISystem::addEntity(IEntity &entity, bool callback)
 {
+    Lock lock(mutex_);
     auto found = std::find(entities_.begin(), entities_.end(), &entity);
     if (found == entities_.end()) {
         addProperties(entity);
         entities_.push_back(&entity);
+        lock.unlock();
         if (callback) {
             entity.addSystem(*this, false);
         }
@@ -67,9 +59,11 @@ ISystem::addEntity(IEntity &entity, bool callback)
 void
 ISystem::dropEntity(IEntity &entity, bool callback)
 {
+    Lock lock(mutex_);
     auto found = std::find(entities_.begin(), entities_.end(), &entity);
     if (found != entities_.end()) {
         entities_.erase(found);
+        lock.unlock();
         if (callback) {
             entity.dropSystem(*this, false);
         }

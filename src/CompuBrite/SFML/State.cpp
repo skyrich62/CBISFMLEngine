@@ -26,6 +26,7 @@
 
 #include "CompuBrite/SFML/State.h"
 #include "CompuBrite/SFML/ISystem.h"
+#include "CompuBrite/SFML/Context.h"
 
 namespace CompuBrite::SFML {
 
@@ -37,7 +38,7 @@ State::State(bool lastDrawn, bool lastUpdated, bool lastDispatched) :
 }
 
 bool
-State::draw(sf::RenderTarget &target, sf::RenderStates states) const
+State::draw(Context &target, sf::RenderStates states) const
 {
     for (auto system: systems_) {
         system->draw(target, states);
@@ -49,7 +50,7 @@ bool
 State::update(sf::Time dt, Context &context)
 {
     for (auto system: systems_) {
-        system->update(dt);
+        system->update(context, dt);
     }
     return lastUpdated_;
 }

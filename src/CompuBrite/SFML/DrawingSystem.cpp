@@ -25,6 +25,7 @@
 */
 
 #include "CompuBrite/SFML/DrawingSystem.h"
+#include "CompuBrite/SFML/Context.h"
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 
@@ -39,23 +40,27 @@ DrawingSystem::DrawingSystem(bool boundingBoxes) :
 }
 
 void
-DrawingSystem::draw(sf::RenderTarget &target, sf::RenderStates states) const
+DrawingSystem::draw(Context &target, sf::RenderStates states) const
 {
     std::multimap<int, IEntity*> drawings;
-    for (auto entity : entities_) {
-        drawings.insert(std::pair<int, IEntity*>(entity->zOrder(), entity));
+    if (true) {
+        auto l = lock();
+        for (auto entity : entities_) {
+            drawings.insert(std::pair<int, IEntity*>(entity->zOrder(), entity));
+        }
     }
-    for (auto entity: drawings) {
-        target.draw(*entity.second, states);
+    for (auto &val: drawings) {
+        auto entity = val.second;
+        target.window().draw(*entity, states);
         if (boundingBoxes_) {
-            auto bounds = entity.second->getGlobalBounds();
+            auto bounds = entity->getGlobalBounds();
             sf::Vector2f size(bounds.width, bounds.height);
             sf::RectangleShape box(size);
             box.setPosition(bounds.left, bounds.top);
             box.setOutlineColor(sf::Color::Green);
             box.setFillColor(sf::Color::Transparent);
             box.setOutlineThickness(2.0f);
-            target.draw(box);
+            target.window().draw(box);
         }
     }
 }
