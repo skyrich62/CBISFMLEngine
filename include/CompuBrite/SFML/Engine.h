@@ -44,10 +44,9 @@ class Context;
 /// Encapsulates the main interface for the framework.  The Engine handles
 /// events, (keyboard, mouse, joystick, etc), holds the state stack, and
 /// manages updating and drawing all objects through the states.
-class Engine : public ThreadPool
+class Engine
 {
 public:
-    using Task = ThreadPool::Task;
 
     Engine() = default;
     virtual ~Engine() = default;
@@ -93,8 +92,21 @@ public:
     /// only after all Contexts have stopped running.
     void run();
 
+    using Task = ThreadPool::Task;
+
+    void addTask(Task task)                      { _pool.addTask(task); }
+
+    template <typename Ret>
+    std::promise<Ret> addTask(std::function<Ret ()> work)
+    {
+        return _pool.addTask<Ret>(work);
+    }
+
+    void addThreads(std::size_t size = 1)        { _pool.activate(size); }
+
 private:
     ResourceManager<std::string, Context> _contexts;
+    ThreadPool                            _pool;
 };
 
 } // namespace CompuBrite::SFML

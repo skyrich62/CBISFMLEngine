@@ -97,7 +97,7 @@ Context::start()
         _engine.addTask([this] { this->update(); });
         _engine.addTask([this] { this->render(); });
     }
-    _engine.activate(3);
+    _engine.addThreads(3);
 }
 
 void

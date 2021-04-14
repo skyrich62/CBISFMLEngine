@@ -349,6 +349,7 @@ int main()
 
     // Push the main state.
     context.stack().push(mainState);
+    engine.addThreads(3u);
 
     // Run the engine.
     engine.run();

@@ -37,7 +37,7 @@ ISystem::draw(Context &target, sf::RenderStates states) const
 }
 
 void
-ISystem::update(Context &, sf::Time)
+ISystem::update(Context &context, sf::Time dt)
 {
 }
 

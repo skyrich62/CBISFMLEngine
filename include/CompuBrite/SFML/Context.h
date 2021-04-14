@@ -125,7 +125,17 @@ public:
         _windowArgs = {name, mode, title, style, settings};
     }
 
+    using Task = ThreadPool::Task;
 
+    void addTask(Task task)                      { _engine.addTask(task); }
+
+    template <typename Ret>
+    std::promise<Ret> addTask(std::function<Ret ()> work)
+    {
+        return _engine.addTask<Ret>(work);
+    }
+
+    void addThreads(std::size_t size = 1)        { _engine.addThreads(size); }
 
 private:
     /// Update the stack on a regular, (_timeSlice) basis

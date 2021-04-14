@@ -27,27 +27,30 @@
 */
 
 #include <SFML/System/Vector2.hpp>
+#include <CompuBrite/SFML/Context.h>
 
 namespace CompuBrite::SFML {
 
 void
 MovementSystem::update(Context &target, sf::Time dt)
 {
-    for (auto entity: entities_) {
-        auto lock = entity->lock();
-        auto &vel = entity->properties.ref<sf::Vector2f>("velocity");
-        auto &rot = entity->properties.ref<float>("rotation");
+    auto lock = this->lock();
+    auto temp = this->entities_;
+    lock.unlock();
 
-        auto acc = entity->properties.get<sf::Vector2f>("acceleration");
-        auto racc = entity->properties.get<float>("rot_accel");
-
-        auto t = dt.asSeconds();
-
-        vel += acc * t;
-        rot += racc * t;
-
-        entity->move(vel * t);
-        entity->rotate(rot * t);
+    for (auto entity: temp) {
+        target.addTask([entity, dt]() {
+            auto lock = entity->lock();
+            auto &vel = entity->properties.ref<sf::Vector2f>("velocity");
+            auto &rot = entity->properties.ref<float>("rotation");
+            auto acc = entity->properties.get<sf::Vector2f>("acceleration");
+            auto racc = entity->properties.get<float>("rot_accel");
+            auto t = dt.asSeconds();
+            vel += acc * t;
+            rot += racc * t;
+            entity->move(vel * t);
+            entity->rotate(rot * t);
+        });
     }
 }
 
