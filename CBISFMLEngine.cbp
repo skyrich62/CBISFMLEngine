@@ -81,7 +81,6 @@
 				<Option object_output=".objs/lander" />
 				<Option type="1" />
 				<Option compiler="mingw_gcc-73_64-bit" />
-				<Option use_console_runner="0" />
 				<Compiler>
 					<Add directory="include" />
 				</Compiler>

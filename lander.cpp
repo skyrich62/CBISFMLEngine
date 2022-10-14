@@ -29,7 +29,7 @@ public:
 
     ~Altitude() = default;
 
-    void update(sf::Time dt) override;
+    void update(cbisf::Context &context, sf::Time dt) override;
 
     cbisf::TextEntity &status()             { return status_;  }
     void setMaxAlt(float maxAlt)            { maxAlt_ = maxAlt; }
@@ -49,7 +49,7 @@ Altitude::addProperties(cbisf::IEntity &entity)
 }
 
 void
-Altitude::update(sf::Time dt)
+Altitude::update(cbisf::Context &context, sf::Time dt)
 {
     for (auto entity: entities_) {
         auto &accel = entity->properties.ref<sf::Vector2f>("acceleration");

@@ -84,8 +84,7 @@ public:
             // silently ignore.
             return;
         }
-        auto prop = dynamic_cast<TProperty<Type>*>(p);
-        prop->set(value);
+        p->set(value);
     }
 
     /// Get the value for the given property.  If no property by the given
