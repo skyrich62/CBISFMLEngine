@@ -153,7 +153,7 @@ private:
     /// @states sf::RenderStates to use to draw this IEntity.
     virtual void drawThis(sf::RenderTarget &target, sf::RenderStates states) const;
 
-private:
+protected:
     using Children = std::vector<IEntity*>;
     using Systems = std::vector<ISystem*>;
 

@@ -62,8 +62,8 @@ public:
     /// @see DrawingSystem
     virtual void draw(Context &target, sf::RenderStates states) const;
 
-    /// Update this ISystem.  By default does nothing, subclasses must override
-    /// to provide required processing.
+    /// Update this ISystem.  By default does nothing.  Subclasses should
+    /// override this method as needed to obtain required behaviors.
     /// @see MovementSystem
     /// @see CollisionSystem
     virtual void update(Context &target, sf::Time dt);

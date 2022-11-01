@@ -56,7 +56,6 @@ public:
 
 protected:
 
-private:
     sf::CircleShape circle_;
 };
 

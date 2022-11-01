@@ -99,7 +99,6 @@ protected:
     /// interface.
     explicit IShapeEntity(sf::Shape &shape);
 
-private:
     /// Draw the sf::Shape which is bound to this IShapeEntity object.
     /// This overrides IEntiry::draw() to provide the means to draw sf::Shape
     /// derived objects.
@@ -107,6 +106,7 @@ private:
     /// @param states The sf::RenderStates to use while drawing.
     void drawThis(sf::RenderTarget &target, sf::RenderStates states) const override;
 
+protected:
     sf::Shape *shape_;
 };
 

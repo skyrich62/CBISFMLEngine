@@ -82,10 +82,11 @@ public:
     /// Get the sprite's color.  Delegates to sf::Sprite::getColor().
     const sf::Color &getColor() const;
 
-private:
-
+protected:
     /// Draw this sprite.  Delegates to sf::Sprite::draw().
     void drawThis(sf::RenderTarget &target, sf::RenderStates states) const override;
+
+protected:
     sf::Sprite sprite_;
 };
 

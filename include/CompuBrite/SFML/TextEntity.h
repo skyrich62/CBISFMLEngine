@@ -73,15 +73,37 @@ public:
 
     sf::Vector2f findCharacterPos(std::size_t index) const
                                                  { return text_.findCharacterPos(index); }
+    /// Start blinking at the given rate in seconds.
+    /// @param rate The rate in seconds to blink
+    void startBlinking(float rate);
 
+    /// Stop blinking, just draw the text.
+    void stopBlinking()                          { _blink = false; _draw = true; }
+
+    /// Hide the text, don't show it.
+    /// Also turns off blinking.
+    void hide()                                  { _blink = false; _draw = false;}
+
+    /// Show the text without blinking.  Blinking can be restarted by calling
+    /// startBlinking.
+    void show()                                  { _blink = false; _draw = true; }
     /// @}
-private:
+protected:
     /// Draw this sf::Text object
     /// Delegates to sf::Text::draw()
     void drawThis(sf::RenderTarget &target, sf::RenderStates states) const override;
 
-private:
+    /// Update this object
+    void updateThis(sf::Time dt) override;
+
+protected:
     sf::Text text_;
+
+private:
+    sf::Time _elapsed{sf::Time::Zero};
+    float    _rate{0.0f};
+    bool     _blink{false};
+    bool     _draw{true};
 };
 
 } // namespace CompuBrite::SFML

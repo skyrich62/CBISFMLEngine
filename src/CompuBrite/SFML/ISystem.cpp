@@ -32,12 +32,12 @@
 namespace CompuBrite::SFML {
 
 void
-ISystem::draw(Context &target, sf::RenderStates states) const
+ISystem::draw(Context &, sf::RenderStates) const
 {
 }
 
 void
-ISystem::update(Context &context, sf::Time dt)
+ISystem::update(Context &, sf::Time dt)
 {
 }
 

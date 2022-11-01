@@ -25,6 +25,7 @@
 				<Option projectLinkerOptionsRelation="-1" />
 				<Option projectLibDirsRelation="-1" />
 				<Compiler>
+					<Add option="-DCBI_CHECKPOINTS=1" />
 					<Add directory="include" />
 				</Compiler>
 				<MakeCommands>
@@ -82,6 +83,7 @@
 				<Option type="1" />
 				<Option compiler="mingw_gcc-73_64-bit" />
 				<Compiler>
+					<Add option="-DCBI_CHECKPOINTS=1" />
 					<Add directory="include" />
 				</Compiler>
 				<Linker>

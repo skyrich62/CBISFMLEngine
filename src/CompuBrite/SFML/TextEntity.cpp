@@ -35,9 +35,33 @@ TextEntity::TextEntity(const sf::String &string, const sf::Font &font, unsigned 
 }
 
 void
+TextEntity::updateThis(sf::Time dt)
+{
+    _elapsed += dt;
+    if (_elapsed.asSeconds() > _rate) {
+        _elapsed = sf::Time::Zero;
+        if (_blink) {
+            _draw = !_draw;
+        }
+    }
+}
+
+void
+TextEntity::startBlinking(float rate)
+{
+    if (!_blink) {
+        _rate = rate;
+        _draw = true;
+        _blink = true;
+    }
+}
+
+void
 TextEntity::drawThis(sf::RenderTarget &target, sf::RenderStates states) const
 {
-    target.draw(text_, states);
+    if (_draw) {
+        target.draw(text_, states);
+    }
 }
 
 sf::FloatRect
